@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+/* Custom scrollbar */
+/* DEĞİŞİKLİK: Scrollbar'ı gizlemek için display: none ekledik */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* DEĞİŞİKLİK: Firefox için de gizleme kuralı ekledik */
+html {
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+/* Base styles */
+body {
+    background-color: rgb(3 7 18);
+    color: rgb(243 244 246);
+    overflow-x: hidden;
+    margin: 0;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+/* Remove default styles
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+} */
+
+/* Loading spinner for 3D content */
+.loader {
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #ec4899;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Gradient text animation */
+.gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #ec4899 75%, #667eea 100%);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient 10s ease infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Brain color palette */
+.text-brain-400 {
+    color: #f472b6;
+}
+
+.text-brain-500 {
+    color: #ec4899;
+}
+
+.text-brain-600 {
+    color: #db2777;
+}
+
+.bg-brain-400 {
+    background-color: #f472b6;
+}
+
+.bg-brain-500 {
+    background-color: #ec4899;
+}
+
+.bg-brain-600 {
+    background-color: #db2777;
+}
+
+.bg-brain-500\/20 {
+    background-color: rgba(236, 72, 153, 0.2);
+}
+
+.bg-brain-900\/20 {
+    background-color: rgba(131, 24, 67, 0.2);
+}
+
+.border-brain-500 {
+    border-color: #ec4899;
+}
+
+/* Section padding for fixed nav */
+section {
+    position: relative;
+}
+
+/* Smooth transitions */
+* {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+/* Focus styles */
+button:focus,
+input:focus,
+textarea:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #ec4899;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px rgb(3 7 18), 0 0 0 4px #ec4899;
+}
+
+/* Hover animations */
+.hover-lift {
+    transition: transform 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+/* Glass morphism effects */
+.glass {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
