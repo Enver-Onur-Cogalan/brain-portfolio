@@ -7,6 +7,7 @@ import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
+import BrainCanvas from './components/canvas/BrainCanvas';
 
 // Hooks & Store
 import useUI from './store/useUI';
@@ -148,6 +149,7 @@ function App() {
       {/* Main Content */}
       {/* DEĞİŞİKLİK: Oluşturduğumuz ref'i main elementine atadık */}
       <main ref={mainContainerRef} className="relative z-10 h-screen overflow-y-auto snap-y snap-mandatory">
+        <BrainCanvas />
         <Hero />
         <About />
         <Skills />
