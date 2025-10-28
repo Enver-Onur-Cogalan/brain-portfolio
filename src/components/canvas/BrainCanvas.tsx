@@ -12,7 +12,7 @@ const CameraAnimator = () => {
 
     useFrame((state) => {
         let targetPosition = new THREE.Vector3(0, 0, 5);
-        let targetGroupPosition = new THREE.Vector3(0, -1, 0);
+        let targetGroupPosition = new THREE.Vector3(-1.5, -1, 0);
         let targetRotation = new THREE.Euler(0, 0, 0);
 
         if (currentSection === 'about') {

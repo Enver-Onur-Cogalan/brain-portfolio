@@ -66,7 +66,7 @@ const ParticlesMaterial = shaderMaterial({
   uTime: 0, uAmplitude: 0.006, uFrequency: 3.0,
   uColor: new THREE.Color(0.6, 0.8, 1.0),
   uPointer: new THREE.Vector2(0, 0),
-  uRadius: 0.1, uStrength: 0.5
+  uRadius: 0.1, uStrength: 0.2
 }, vertexShader, fragmentShader);
 
 extend({ ParticlesMaterial });

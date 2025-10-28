@@ -51,7 +51,7 @@ const Skills = () => {
     return (
         <section
             id="skills"
-            className="h-screen py-20 px-4 md:px-8 lg:px-16 bg-gradient-to-b from-transparent via-purple-950/10 to-transparent snap-start flex flex-col justfiy-center"
+            className="h-screen py-45 px-4 md:px-8 lg:px-16 bg-gradient-to-b from-transparent via-purple-950/10 to-transparent snap-start flex flex-col justfiy-center"
         >
             <div className="max-w-6xl mx-auto">
                 <motion.div

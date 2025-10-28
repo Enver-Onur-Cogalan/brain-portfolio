@@ -12,8 +12,8 @@ import BrainCanvas from './components/canvas/BrainCanvas';
 // Hooks & Store
 import useUI from './store/useUI';
 import { useScrollProgress } from './hooks/useScrollProgress';
-import { useLobeMapping } from './hooks/useLobeMapping';
 import { useEffect, useRef, type RefObject } from 'react';
+import { useScrollTransition } from './hooks/useScrollTransition';
 
 function App() {
   const {
@@ -30,12 +30,11 @@ function App() {
 
   useScrollProgress(mainContainerRef as RefObject<HTMLElement>);
 
-  const { scrollToSection } = useLobeMapping(mainContainerRef as RefObject<HTMLElement>);
+  const { scrollToSection } = useScrollTransition(mainContainerRef);
 
-  // YENİ: Sayfa yüklendiğinde en başa kaydır
   useEffect(() => {
     mainContainerRef.current?.scrollTo({ top: 0, behavior: 'instant' });
-  }, []); // Boş dependency array ile sadece ilk render'da çalışır
+  }, []);
 
   // Navigation items
   const navItems = [
@@ -147,32 +146,32 @@ function App() {
       </div>
 
       {/* Main Content */}
-      <main ref={mainContainerRef} className="h-screen overflow-y-auto overflow-x-hidden snap-y snap-mandatory scroll-smooth">
+      <main ref={mainContainerRef} className="h-screen overflow-y-auto overflow-x-hidden scroll-smooth">
         <BrainCanvas />
 
-        <div className='h-screen snap-start pointer-events-none'>
+        <div id='hero' className='h-screen pointer-events-none'>
           <Hero />
         </div>
 
-        <div className='relative z-10 w-full flex justify-end snap-start h-screen pointer-events-none'>
+        <div id='about' className='relative z-10 w-full flex justify-end h-screen pointer-events-none'>
           <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
             <About />
           </div>
         </div>
 
-        <div className='relative z-10 w-full flex justify-end snap-start h-screen pointer-events-none'>
+        <div id='skills' className='relative z-10 w-full flex justify-end h-screen pointer-events-none'>
           <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
             <Skills />
           </div>
         </div>
 
-        <div className='relative z-10 w-full flex justify-end snap-start h-screen pointer-events-none'>
+        <div id='projects' className='relative z-10 w-full flex justify-end h-screen pointer-events-none'>
           <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
             <Projects />
           </div>
         </div>
 
-        <div className='relative z-10 w-full flex justify-end snap-start h-screen pointer-events-none'>
+        <div id='contact' className='relative z-10 w-full flex justify-end h-screen pointer-events-none'>
           <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
             <Contact />
           </div>

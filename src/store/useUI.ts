@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 export type BrainLobe = 'frontal' | 'parietal' | 'temporal' | 'occipital' | null;
 export type Section = 'hero' | 'about' | 'skills' | 'projects' | 'contact';
+export type TransitionPhase = 'idle' | 'dissolving' | 'gathering';
 
 interface UIState {
     // Lobe Section
@@ -33,6 +34,12 @@ interface UIState {
     // Sound
     isSoundEnabled: boolean;
     toggleSound: () => void;
+
+    // Scroll snap
+    isTransitioning: boolean;
+    setTransitioning: (isTransitioning: boolean) => void;
+    transitionPhase: TransitionPhase;
+    setTransitionPhase: (phase: TransitionPhase) => void;
 }
 
 const useUI = create<UIState>((set) => ({
@@ -45,6 +52,8 @@ const useUI = create<UIState>((set) => ({
     isDarkMode: true,
     isMobileMenuOpen: false,
     isSoundEnabled: false,
+    isTransitioning: false,
+    transitionPhase: 'idle',
 
     // Actions
     setSelectedLobe: (lobe) => set({ selectedLobe: lobe }),
@@ -55,6 +64,8 @@ const useUI = create<UIState>((set) => ({
     toggleTheme: () => set((state) => ({ isDarkMode: !state.isDarkMode })),
     toggleMobileMenu: () => set((state) => ({ isMobileMenuOpen: !state.isMobileMenuOpen })),
     toggleSound: () => set((state) => ({ isSoundEnabled: !state.isSoundEnabled })),
+    setTransitioning: (isTransitioning) => set({ isTransitioning }),
+    setTransitionPhase: (phase) => set({ transitionPhase: phase }),
 }));
 
 export default useUI;
