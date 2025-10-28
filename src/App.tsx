@@ -147,16 +147,15 @@ function App() {
       </div>
 
       {/* Main Content */}
-      {/* DEĞİŞİKLİK: Oluşturduğumuz ref'i main elementine atadık */}
       <main ref={mainContainerRef} className="scroll-container h-screen overflow-y-auto overflow-x-hidden scroll-smooth text-foreground">
         <BrainCanvas />
 
-        <div className='bg-background'>
+        <div>
           <Hero />
         </div>
 
         <div className='relative z-10 w-full flex justify-end'>
-          <div className='w-full md:w-1/2 bg-background text-foreground'>
+          <div className='w-full md:w-1/2 text-foreground'>
             <About />
             <Skills />
             <Projects />
