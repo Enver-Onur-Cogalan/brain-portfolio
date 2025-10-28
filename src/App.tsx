@@ -159,16 +159,19 @@ function App() {
             <About />
           </div>
         </div>
+
         <div className='relative z-10 w-full flex justify-end snap-start h-screen pointer-events-none'>
           <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
             <Skills />
           </div>
         </div>
+
         <div className='relative z-10 w-full flex justify-end snap-start h-screen pointer-events-none'>
           <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
             <Projects />
           </div>
         </div>
+
         <div className='relative z-10 w-full flex justify-end snap-start h-screen pointer-events-none'>
           <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
             <Contact />
