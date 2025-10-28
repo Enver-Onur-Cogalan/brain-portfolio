@@ -12,7 +12,7 @@ const About = () => {
         // DEĞİŞİKLİK: min-h-screen yerine h-screen, snap-start ve flex ekledik.
         <section
             id="about"
-            className="h-screen w-full flex flex-col justify-center py-32 px-4 md:px-8 lg:px-16 snap-start"
+            className="h-screen w-full flex flex-col justify-center py-32 px-8 md:px-8 lg:px-16 snap-start"
         >
             <div className="max-w-5xl mx-auto w-full">
                 <motion.div

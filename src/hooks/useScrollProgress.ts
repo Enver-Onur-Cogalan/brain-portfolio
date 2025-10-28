@@ -9,7 +9,6 @@ export const useScrollProgress = (scrollContainerRef: RefObject<HTMLElement>) =>
         const container = scrollContainerRef.current;
         if (!container) return;
 
-        // DEĞİŞİKLİK: "window" yerine "container" kullanıyoruz.
         const scrollY = container.scrollTop;
         const containerHeight = container.clientHeight;
         const documentHeight = container.scrollHeight;
@@ -19,21 +18,25 @@ export const useScrollProgress = (scrollContainerRef: RefObject<HTMLElement>) =>
 
         const sections = ['hero', 'about', 'skills', 'projects', 'contact'];
 
+        const containerTop = container.getBoundingClientRect().top;
+        const triggerPoint = container.clientHeight * 0.4;
+
+        let currentBestFit = 'hero'; // Varsayılan olarak hero
+
         for (const section of sections) {
             const element = document.getElementById(section);
             if (element) {
-                // DEĞİŞİKLİK: Konum hesaplaması hala window'a göre yapılabilir
-                // ama ideal olanı container'a göre yapmak. Şimdilik böyle bırakalım.
-                const rect = element.getBoundingClientRect();
-                const elementMiddle = rect.top + rect.height / 2;
+                const elementTop = element.getBoundingClientRect().top - containerTop;
 
-                if (elementMiddle >= 0 && elementMiddle <= containerHeight) {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    setCurrentSection(section as any);
-                    break;
+                if (elementTop <= triggerPoint) {
+                    currentBestFit = section;
                 }
             }
         }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setCurrentSection(currentBestFit as any);
+
     }, [setScrollProgress, setCurrentSection, scrollContainerRef]);
 
     useEffect(() => {
@@ -52,7 +55,6 @@ export const useScrollProgress = (scrollContainerRef: RefObject<HTMLElement>) =>
         }
     }, [handleScroll, scrollContainerRef]);
 
-    // Bu fonksiyonları şimdilik devre dışı bırakıyoruz çünkü artık window'u kaydırmıyoruz.
     return {
         // scrollToTop: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
         // scrollToBottom: () => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' }),

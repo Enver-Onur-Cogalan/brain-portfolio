@@ -148,13 +148,21 @@ function App() {
 
       {/* Main Content */}
       {/* DEĞİŞİKLİK: Oluşturduğumuz ref'i main elementine atadık */}
-      <main ref={mainContainerRef} className="relative z-10 h-screen overflow-y-auto snap-y snap-mandatory">
+      <main ref={mainContainerRef} className="scroll-container h-screen overflow-y-auto overflow-x-hidden scroll-smooth text-foreground">
         <BrainCanvas />
-        <Hero />
-        <About />
-        <Skills />
-        <Projects />
-        <Contact />
+
+        <div className='bg-background'>
+          <Hero />
+        </div>
+
+        <div className='relative z-10 w-full flex justify-end'>
+          <div className='w-full md:w-1/2 bg-background text-foreground'>
+            <About />
+            <Skills />
+            <Projects />
+            <Contact />
+          </div>
+        </div>
       </main>
 
       {/* Loading Overlay - Will be used when 3D is loading */}

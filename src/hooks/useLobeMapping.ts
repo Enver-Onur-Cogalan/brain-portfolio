@@ -69,9 +69,16 @@ export const useLobeMapping = (scrollContainerRef: RefObject<HTMLElement>) => {
         const container = scrollContainerRef.current;
         const element = document.getElementById(section);
         if (element && container) {
-            // DEĞİŞİKLİK: scrollIntoView yerine container'ın scrollTop'unu kullanıyoruz
+
+            const containerTop = container.getBoundingClientRect().top;
+            const elementTop = element.getBoundingClientRect().top;
+
+            const relativeTop = elementTop - containerTop;
+
+            const top = container.scrollTop + relativeTop;
+
             container.scrollTo({
-                top: element.offsetTop,
+                top: top,
                 behavior: 'smooth'
             });
         }

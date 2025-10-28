@@ -132,11 +132,6 @@ textarea:focus {
 
 button:focus-visible,
 input:focus-visible,
-textarea:focus-visible {
-    outline: 2px solid #ec4899;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 2px rgb(3 7 18), 0 0 0 4px #ec4899;
-}
 
 /* Hover animations */
 .hover-lift {
@@ -159,4 +154,14 @@ textarea:focus-visible {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+}
+
+@layer components {
+    .section-padding {
+        @apply py-20 px-4 md:px-8 lg:px-16;
+    }
+
+    .form-input {
+        @apply w-full bg-transparent border-b-2 border-gray-700 focus:border-green-500 text-white placeholder-gray-500 transition-colors duration-300 ease-in-out outline-none py-3;
+    }
 }
