@@ -165,3 +165,16 @@ input:focus-visible,
         @apply w-full bg-transparent border-b-2 border-gray-700 focus:border-green-500 text-white placeholder-gray-500 transition-colors duration-300 ease-in-out outline-none py-3;
     }
 }
+
+@layer utilities {
+    .section-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .section-container {
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
+    }
+}

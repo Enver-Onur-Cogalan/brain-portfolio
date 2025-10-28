@@ -147,18 +147,30 @@ function App() {
       </div>
 
       {/* Main Content */}
-      <main ref={mainContainerRef} className="scroll-container h-screen overflow-y-auto overflow-x-hidden scroll-smooth text-foreground">
+      <main ref={mainContainerRef} className="h-screen overflow-y-auto overflow-x-hidden snap-y snap-mandatory scroll-smooth">
         <BrainCanvas />
 
-        <div className='pointer-events-none'>
+        <div className='h-screen snap-start pointer-events-none'>
           <Hero />
         </div>
 
-        <div className='relative z-10 w-full flex justify-end pointer-events-none'>
-          <div className='w-full md:w-1/2 text-foreground pointer-events-auto'>
+        <div className='relative z-10 w-full flex justify-end snap-start h-screen pointer-events-none'>
+          <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
             <About />
+          </div>
+        </div>
+        <div className='relative z-10 w-full flex justify-end snap-start h-screen pointer-events-none'>
+          <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
             <Skills />
+          </div>
+        </div>
+        <div className='relative z-10 w-full flex justify-end snap-start h-screen pointer-events-none'>
+          <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
             <Projects />
+          </div>
+        </div>
+        <div className='relative z-10 w-full flex justify-end snap-start h-screen pointer-events-none'>
+          <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
             <Contact />
           </div>
         </div>
