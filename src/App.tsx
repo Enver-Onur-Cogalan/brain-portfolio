@@ -150,12 +150,12 @@ function App() {
       <main ref={mainContainerRef} className="scroll-container h-screen overflow-y-auto overflow-x-hidden scroll-smooth text-foreground">
         <BrainCanvas />
 
-        <div>
+        <div className='pointer-events-none'>
           <Hero />
         </div>
 
-        <div className='relative z-10 w-full flex justify-end'>
-          <div className='w-full md:w-1/2 text-foreground'>
+        <div className='relative z-10 w-full flex justify-end pointer-events-none'>
+          <div className='w-full md:w-1/2 text-foreground pointer-events-auto'>
             <About />
             <Skills />
             <Projects />

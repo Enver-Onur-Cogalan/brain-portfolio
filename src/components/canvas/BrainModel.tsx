@@ -1,25 +1,27 @@
 import { shaderMaterial, useGLTF } from "@react-three/drei";
 import { extend, useFrame } from "@react-three/fiber";
-import { useMemo, type JSX } from "react";
+import { useMemo, useRef, type JSX } from "react";
 import * as THREE from 'three';
 import useUI from "../../store/useUI";
 
-// GLSL Shader Kodu 
+// GLSL Shader Kodu
 const vertexShader = `
   uniform float uTime;
   uniform float uAmplitude;
   uniform float uFrequency;
-  // ... (içerik aynı kaldığı için kısa kesiyorum)
+  uniform vec2 uPointer;
+  uniform float uRadius;
+  uniform float uStrength;
+
+  float rand(vec2 co){ return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453); }
   vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
-
   float snoise(vec2 v) {
     const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
     vec2 i  = floor(v + dot(v, C.yy));
     vec2 x0 = v - i + dot(i, C.xx);
-    vec2 i1;
-    i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+    vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
     vec4 x12 = x0.xyxy + C.xxzz;
     x12.xy -= i1;
     i = mod289(i);
@@ -39,56 +41,91 @@ const vertexShader = `
 
   void main() {
     float noise = snoise(position.xy * uFrequency + uTime * 0.2);
-    vec3 displacedPosition = position + normal * noise * uAmplitude;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(displacedPosition, 1.0);
+    vec3 displacedPos = position + normal * noise * uAmplitude;
+    vec4 projectedPos = projectionMatrix * viewMatrix * modelMatrix * vec4(displacedPos, 1.0);
+    vec2 ndc = projectedPos.xy / projectedPos.w;
+    float dist = distance(ndc, uPointer);
+    float force = 1.0 - smoothstep(0.0, uRadius, dist);
+    float sharpenedForce = pow(force, 3.0);
+    vec3 randomDir = normalize(vec3(rand(position.yz) - 0.5, rand(position.xz) - 0.5, rand(position.xy) - 0.5));
+    displacedPos += randomDir * sharpenedForce * uStrength;
+    gl_PointSize = 1.5 + (1.0 - sharpenedForce) * 2.0;
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(displacedPos, 1.0);
   }
 `;
 
 const fragmentShader = `
   uniform vec3 uColor;
   void main() {
-    gl_FragColor = vec4(uColor, 0.4);
+    if (length(gl_PointCoord - vec2(0.5, 0.5)) > 0.475) discard;
+    gl_FragColor = vec4(uColor, 1.0);
   }
 `;
 
-const PulsatingMaterial = shaderMaterial(
-    { uTime: 0, uAmplitude: 0.01, uFrequency: 2.0, uColor: new THREE.Color(0.4, 0.6, 1.0) },
-    vertexShader,
-    fragmentShader
-);
+const ParticlesMaterial = shaderMaterial({
+  uTime: 0, uAmplitude: 0.006, uFrequency: 3.0,
+  uColor: new THREE.Color(0.6, 0.8, 1.0),
+  uPointer: new THREE.Vector2(0, 0),
+  uRadius: 0.1, uStrength: 0.5
+}, vertexShader, fragmentShader);
 
-extend({ PulsatingMaterial });
+extend({ ParticlesMaterial });
 
 declare module '@react-three/fiber' {
-    interface ThreeElements {
-        pulsatingMaterial: JSX.IntrinsicElements['shaderMaterial'] & { uTime?: number; uColor?: THREE.Color; }
+  interface ThreeElements {
+    particlesMaterial: JSX.IntrinsicElements['shaderMaterial'] & {
+      uTime?: number; uColor?: THREE.Color; uPointer?: THREE.Vector2;
+      uAmplitude?: number; uFrequency?: number;
     }
+  }
 }
 
 export function BrainModel() {
-    const { scene } = useGLTF('/brain_hologram.glb');
-    const { isSceneLoaded, setSceneLoaded } = useUI();
+  const { scene } = useGLTF('/brain_hologram.glb');
+  const { isSceneLoaded, setSceneLoaded } = useUI();
 
-    const pulsatingMaterial = useMemo(() => new PulsatingMaterial(), []);
+  const delayedPointer = useRef(new THREE.Vector2(0, 0));
 
-    // Sahnedeki tüm mesh'lerin materyalini bizim özel materyalimizle değiştiriyoruz
-    useMemo(() => {
-        scene.traverse((child) => {
-            if (child instanceof THREE.Mesh) {
-                child.material = pulsatingMaterial;
-            }
-        });
-    }, [scene, pulsatingMaterial]);
-
-    useFrame(({ clock }) => {
-        pulsatingMaterial.uTime = clock.getElapsedTime();
+  const points = useMemo(() => {
+    const pointsArray: THREE.Points[] = [];
+    scene.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        // Her mesh'i bir points objesine dönüştür
+        const pointsInstance = new THREE.Points(
+          child.geometry,
+          new ParticlesMaterial()
+        );
+        pointsArray.push(pointsInstance);
+      }
     });
+    // Sahnedeki tüm mesh'leri içeren bir grup döndür
+    const group = new THREE.Group();
+    group.add(...pointsArray);
+    return group;
+  }, [scene]);
 
-    if (!isSceneLoaded) {
-        setSceneLoaded(true);
-    }
+  useFrame((state) => {
+    // Gecikme faktörü
+    const lerpFactor = 0.05
 
-    return <primitive object={scene} />;
+    delayedPointer.current.lerp(state.pointer, lerpFactor);
+
+    points.children.forEach(child => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const material = (child as THREE.Points).material as any;
+      if (material) {
+        material.uTime = state.clock.getElapsedTime();
+        material.uPointer = state.pointer;
+      }
+    })
+  });
+
+  if (!isSceneLoaded) {
+    setSceneLoaded(true);
+  }
+
+
+  return <primitive object={points} />;
 }
 
 useGLTF.preload('/brain_hologram.glb');
