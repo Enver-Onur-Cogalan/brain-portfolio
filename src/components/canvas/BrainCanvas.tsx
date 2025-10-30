@@ -5,6 +5,7 @@ import { BrainModel } from "./BrainModel";
 import { Suspense, useRef } from "react";
 import useUI from "../../store/useUI";
 import * as THREE from 'three';
+import TransitionParticles from "./TransitionParticles";
 
 const CameraAnimator = () => {
     const { currentSection } = useUI();
@@ -43,9 +44,12 @@ const CameraAnimator = () => {
     });
 
     return (
-        <group ref={groupRef} position={[0, -1, 0]}>
-            <BrainModel />
-        </group>
+        <>
+            <group ref={groupRef} position={[0, -1, 0]}>
+                <BrainModel />
+            </group>
+            <TransitionParticles brainRef={groupRef.current} />
+        </>
     );
 };
 

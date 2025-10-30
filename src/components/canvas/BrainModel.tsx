@@ -56,9 +56,10 @@ const vertexShader = `
 
 const fragmentShader = `
   uniform vec3 uColor;
+  uniform float uOpacity;
   void main() {
     if (length(gl_PointCoord - vec2(0.5, 0.5)) > 0.475) discard;
-    gl_FragColor = vec4(uColor, 1.0);
+    gl_FragColor = vec4(uColor, uOpacity);
   }
 `;
 
@@ -66,7 +67,8 @@ const ParticlesMaterial = shaderMaterial({
   uTime: 0, uAmplitude: 0.006, uFrequency: 3.0,
   uColor: new THREE.Color(0.6, 0.8, 1.0),
   uPointer: new THREE.Vector2(0, 0),
-  uRadius: 0.1, uStrength: 0.2
+  uRadius: 0.1, uStrength: 0.2,
+  uOpacity: 1.0
 }, vertexShader, fragmentShader);
 
 extend({ ParticlesMaterial });
@@ -76,13 +78,14 @@ declare module '@react-three/fiber' {
     particlesMaterial: JSX.IntrinsicElements['shaderMaterial'] & {
       uTime?: number; uColor?: THREE.Color; uPointer?: THREE.Vector2;
       uAmplitude?: number; uFrequency?: number;
+      uOpacity?: number;
     }
   }
 }
 
 export function BrainModel() {
   const { scene } = useGLTF('/brain_hologram.glb');
-  const { isSceneLoaded, setSceneLoaded } = useUI();
+  const { isSceneLoaded, setSceneLoaded, transitionPhase } = useUI();
 
   const delayedPointer = useRef(new THREE.Vector2(0, 0));
 
@@ -116,6 +119,9 @@ export function BrainModel() {
       if (material) {
         material.uTime = state.clock.getElapsedTime();
         material.uPointer = state.pointer;
+
+        const target = (transitionPhase === 'dissolving' || transitionPhase === 'gathering') ? 0.0 : 1.0;
+        material.uOpacity = THREE.MathUtils.lerp(material.uOpacity, target, 0.15);
       }
     })
   });
