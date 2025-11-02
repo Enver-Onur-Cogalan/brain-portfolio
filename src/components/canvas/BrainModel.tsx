@@ -120,8 +120,16 @@ export function BrainModel() {
         material.uTime = state.clock.getElapsedTime();
         material.uPointer = state.pointer;
 
-        const target = (transitionPhase === 'dissolving' || transitionPhase === 'gathering') ? 0.0 : 1.0;
-        material.uOpacity = THREE.MathUtils.lerp(material.uOpacity, target, 0.15);
+        let target = 1.0;
+        if (transitionPhase === 'dissolving') {
+          target = 0.0;
+        } else if (transitionPhase === 'gathering') {
+          target = 0.0;
+        } else {
+          target = 1.0;
+        }
+
+        material.uOpacity = THREE.MathUtils.lerp(material.uOpacity, target, 0.8);
       }
     })
   });

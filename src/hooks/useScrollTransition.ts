@@ -9,7 +9,9 @@ const sections: Section[] = ['hero', 'about', 'skills', 'projects', 'contact'];
 
 const DISSOLVE_DURATION = 800;
 const GATHER_DURATION = 800;
-const SCROLL_DURATION = 1.2;
+const SCROLL_DURATION = 1.0;
+
+const SCROLL_DEBOUNCE = 100;
 
 export const useScrollTransition = (containerRef: React.RefObject<HTMLElement>) => {
     const {
@@ -22,6 +24,7 @@ export const useScrollTransition = (containerRef: React.RefObject<HTMLElement>) 
 
     const isTransitioningRef = useRef(isTransitioning);
     const currentSectionRef = useRef(currentSection);
+    const lastScrollTime = useRef(0);
 
     useEffect(() => {
         isTransitioningRef.current = isTransitioning;
@@ -32,7 +35,15 @@ export const useScrollTransition = (containerRef: React.RefObject<HTMLElement>) 
     }, [currentSection]);
 
     const startTransition = useCallback((nextIndex: number) => {
+        const now = performance.now();
+
+        if (now - lastScrollTime.current < SCROLL_DEBOUNCE) {
+            return;
+        }
+        lastScrollTime.current = now;
+
         setTransitioning(true);
+
         setTransitionPhase('dissolving');
 
         setTimeout(() => {
@@ -41,6 +52,7 @@ export const useScrollTransition = (containerRef: React.RefObject<HTMLElement>) 
 
             if (containerRef.current && sectionElement) {
                 setCurrentSection(nextSection);
+
                 gsap.to(containerRef.current, {
                     scrollTo: { y: sectionElement.offsetTop },
                     duration: SCROLL_DURATION,
@@ -88,15 +100,16 @@ export const useScrollTransition = (containerRef: React.RefObject<HTMLElement>) 
         return () => container.removeEventListener('wheel', handleWheel);
     }, [containerRef, startTransition]);
 
-    const scrollToSection = (section: Section) => {
+    const scrollToSection = useCallback((section: Section) => {
         const nextIndex = sections.indexOf(section);
-        if (nextIndex !== -1 && sections[nextIndex] !== currentSectionRef.current) {
-            if (isTransitioningRef.current) return;
 
-            isTransitioningRef.current = true;
-            startTransition(nextIndex);
-        }
-    };
+        if (nextIndex === -1) return;
+        if (sections[nextIndex] === currentSectionRef.current) return;
+        if (isTransitioningRef.current) return;
+
+        isTransitioningRef.current = true;
+        startTransition(nextIndex);
+    }, [startTransition]);
 
     return { scrollToSection };
 };

@@ -6,12 +6,14 @@ import useUI from "../../store/useUI";
 
 type Mode = 'none' | 'dissolving' | 'gathering';
 
-const COUNT = 2500;
+const COUNT = 3000;
 const DISSOLVE_MS = 800;
 const GATHER_MS = 800;
 
 function easeOutCubic(t: number) { return 1 - Math.pow(1 - t, 3); }
-function easeInOut(t: number) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+function easeInOutQuart(t: number) {
+    return t < 0.5 ? 8 * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
+}
 
 export default function TransitionParticles({ brainRef }: { brainRef: THREE.Group | null }) {
     const { transitionPhase } = useUI();
@@ -49,29 +51,41 @@ export default function TransitionParticles({ brainRef }: { brainRef: THREE.Grou
             modeRef.current = 'dissolving';
             startTimeRef.current = performance.now();
             durationRef.current = DISSOLVE_MS;
-            if (matRef.current) matRef.current.opacity = 1;
+            if (matRef.current) matRef.current.opacity = 0;
 
             // start around brain, end downwards
             for (let i = 0; i < COUNT; i++) {
                 const si = i * 3;
                 // start in small sphere around brain
-                const r = 0.6 * Math.cbrt(Math.random());
+                const r = 0.15 * Math.cbrt(Math.random());
                 const theta = Math.random() * Math.PI * 2;
                 const phi = Math.acos(2 * Math.random() - 1);
+
                 const sx = center.x + r * Math.sin(phi) * Math.cos(theta);
                 const sy = center.y + r * Math.cos(phi);
                 const sz = center.z + r * Math.sin(phi) * Math.sin(theta);
-                starts.current[si] = sx; starts.current[si + 1] = sy; starts.current[si + 2] = sz;
+
+                starts.current[si] = sx;
+                starts.current[si + 1] = sy;
+                starts.current[si + 2] = sz;
 
                 // end: flow down
-                const ex = center.x + (Math.random() - 0.5) * 0.8;
-                const ey = center.y - 2.2 - Math.random() * 1.2;
-                const ez = center.z + (Math.random() - 0.5) * 0.8;
-                ends.current[si] = ex; ends.current[si + 1] = ey; ends.current[si + 2] = ez;
+                const spreadX = (Math.random() - 0.5) * 1.2;
+                const spreadZ = (Math.random() - 0.5) * 1.2;
+                const ex = center.x + spreadX;
+                const ey = center.y - 2.5 - Math.random() * 1.5;
+                const ez = center.z + spreadZ;
 
-                positions[si] = sx; positions[si + 1] = sy; positions[si + 2] = sz;
+                ends.current[si] = ex;
+                ends.current[si + 1] = ey;
+                ends.current[si + 2] = ez;
+
+                positions[si] = sx;
+                positions[si + 1] = sy;
+                positions[si + 2] = sz;
             }
             markNeedsUpdate();
+
         } else if (transitionPhase === 'gathering') {
             modeRef.current = 'gathering';
             startTimeRef.current = performance.now();
@@ -82,19 +96,28 @@ export default function TransitionParticles({ brainRef }: { brainRef: THREE.Grou
             for (let i = 0; i < COUNT; i++) {
                 const si = i * 3;
 
-                const sx = center.x + (Math.random() - 0.5) * 2.0;
-                const sy = center.y + 2.5 + Math.random() * 1.5;
-                const sz = center.z + (Math.random() - 0.5) * 2.0;
-                starts.current[si] = sx; starts.current[si + 1] = sy; starts.current[si + 2] = sz;
+                const sx = center.x + (Math.random() - 0.5) * 2.5;
+                const sy = center.y - 2.0 + Math.random() * 0.5;
+                const sz = center.z + (Math.random() - 0.5) * 2.5;
 
-                const ex = center.x + (Math.random() - 0.5) * 0.2;
-                const ey = center.y + (Math.random() - 0.5) * 0.2;
-                const ez = center.z + (Math.random() - 0.5) * 0.2;
-                ends.current[si] = ex; ends.current[si + 1] = ey; ends.current[si + 2] = ez;
+                starts.current[si] = sx;
+                starts.current[si + 1] = sy;
+                starts.current[si + 2] = sz;
 
-                positions[si] = sx; positions[si + 1] = sy; positions[si + 2] = sz;
+                const ex = center.x + (Math.random() - 0.5) * 0.15;
+                const ey = center.y + (Math.random() - 0.5) * 0.15;
+                const ez = center.z + (Math.random() - 0.5) * 0.15;
+
+                ends.current[si] = ex;
+                ends.current[si + 1] = ey;
+                ends.current[si + 2] = ez;
+
+                positions[si] = sx;
+                positions[si + 1] = sy;
+                positions[si + 2] = sz;
             }
             markNeedsUpdate();
+
         } else {
             // idle -> hide
             modeRef.current = 'none';
@@ -106,8 +129,10 @@ export default function TransitionParticles({ brainRef }: { brainRef: THREE.Grou
         if (modeRef.current === 'none') return;
 
         const now = performance.now();
-        const t = Math.min(1, (now - startTimeRef.current) / durationRef.current);
-        const f = modeRef.current === 'dissolving' ? easeOutCubic(t) : easeInOut(t);
+        const elapsed = now - startTimeRef.current;
+        const t = Math.min(1, elapsed / durationRef.current);
+
+        const f = modeRef.current === 'dissolving' ? easeOutCubic(t) : easeInOutQuart(t);
 
         // interpolate positions
         for (let i = 0; i < COUNT; i++) {
@@ -121,14 +146,48 @@ export default function TransitionParticles({ brainRef }: { brainRef: THREE.Grou
         // opaklık eğrisi
         if (matRef.current) {
             if (modeRef.current === 'dissolving') {
-                const alpha = 1 - f;
-                matRef.current.opacity = THREE.MathUtils.lerp(matRef.current.opacity, alpha, 0.4);
-                if (t >= 1) { modeRef.current = 'none'; matRef.current.opacity = 0; }
-            } else {
-                const fadeStart = 0.85;
-                const alpha = t < fadeStart ? 1 : 1 - (t - fadeStart) / (1 - fadeStart);
-                matRef.current.opacity = THREE.MathUtils.lerp(matRef.current.opacity, alpha, 0.4);
-                if (t >= 1) { modeRef.current = 'none'; matRef.current.opacity = 0; }
+                // Partiküller belirirken beynin kaybolması
+                let alpha;
+                if (t < 0.3) {
+                    alpha = t / 0.3;
+                } else if (t < 0.7) {
+                    alpha = 1;
+                } else {
+                    alpha = 1 - (t - 0.7) / 0.3;
+                }
+
+                matRef.current.opacity = THREE.MathUtils.lerp(
+                    matRef.current.opacity,
+                    alpha,
+                    0.15
+                );
+
+                if (t >= 1) {
+                    modeRef.current = 'none';
+                    matRef.current.opacity = 0;
+                }
+
+            } else if (modeRef.current === 'gathering') {
+                // Partiküller kaybolurken beynin belirmesi
+                let alpha;
+                if (t < 0.3) {
+                    alpha = 1;
+                } else if (t < 0.8) {
+                    alpha = 1 - (t - 0.3) / 0.5;
+                } else {
+                    alpha = 0;
+                }
+
+                matRef.current.opacity = THREE.MathUtils.lerp(
+                    matRef.current.opacity,
+                    alpha,
+                    0.15
+                );
+
+                if (t >= 1) {
+                    modeRef.current = 'none';
+                    matRef.current.opacity = 0;
+                }
             }
         }
     });
@@ -145,7 +204,7 @@ export default function TransitionParticles({ brainRef }: { brainRef: THREE.Grou
             <pointsMaterial
                 ref={matRef}
                 color={new THREE.Color(0.65, 0.85, 1.0)}
-                size={0.02}
+                size={0.04}
                 sizeAttenuation
                 transparent
                 opacity={0}
