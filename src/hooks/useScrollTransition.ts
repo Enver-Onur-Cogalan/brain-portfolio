@@ -7,9 +7,9 @@ gsap.registerPlugin(ScrollToPlugin);
 
 const sections: Section[] = ['hero', 'about', 'skills', 'projects', 'contact'];
 
-const DISSOLVE_DURATION = 800;
-const GATHER_DURATION = 800;
-const SCROLL_DURATION = 1.0;
+const DISSOLVE_DURATION = 400;  // dağılma + aşağı düşme
+const GATHER_DURATION = 300;    // toplanma
+const SCROLL_DURATION = 1.0;    // scroll
 
 const SCROLL_DEBOUNCE = 100;
 
@@ -44,8 +44,10 @@ export const useScrollTransition = (containerRef: React.RefObject<HTMLElement>) 
 
         setTransitioning(true);
 
+        // FAZ 1: DISSOLVING
         setTransitionPhase('dissolving');
 
+        // FAZ 2: SCROLL
         setTimeout(() => {
             const nextSection = sections[nextIndex];
             const sectionElement = document.getElementById(nextSection);
@@ -56,16 +58,20 @@ export const useScrollTransition = (containerRef: React.RefObject<HTMLElement>) 
                 gsap.to(containerRef.current, {
                     scrollTo: { y: sectionElement.offsetTop },
                     duration: SCROLL_DURATION,
-                    ease: 'power2.inOut'
+                    ease: 'power2.inOut',
+                    onComplete: () => {
+                        setTransitionPhase('gathering');
+                    }
                 });
             }
 
-            setTransitionPhase('gathering');
-
+            // FAZ 3: GATHERING
             setTimeout(() => {
-                setTransitionPhase('idle');
-                setTransitioning(false);
-            }, GATHER_DURATION);
+                setTimeout(() => {
+                    setTransitionPhase('idle');
+                    setTransitioning(false);
+                }, GATHER_DURATION);
+            }, SCROLL_DURATION * 1000);
 
         }, DISSOLVE_DURATION);
     }, [setTransitioning, setTransitionPhase, containerRef, setCurrentSection]);
@@ -97,6 +103,7 @@ export const useScrollTransition = (containerRef: React.RefObject<HTMLElement>) 
         };
 
         container.addEventListener('wheel', handleWheel, { passive: false });
+
         return () => container.removeEventListener('wheel', handleWheel);
     }, [containerRef, startTransition]);
 
