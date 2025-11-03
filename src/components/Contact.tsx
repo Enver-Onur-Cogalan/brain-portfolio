@@ -1,8 +1,13 @@
 import { motion } from "framer-motion";
 import { Mail, Github, Linkedin, MapPin, Send } from "lucide-react";
 import React, { useState } from "react";
+import { useTranslation } from "../locales/translations";
+import useUI from "../store/useUI";
 
 const Contact = () => {
+    const { t } = useTranslation();
+    const { isDarkMode } = useUI();
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -14,7 +19,7 @@ const Contact = () => {
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
     const socialLinks = [
-        { icon: Github, href: 'https://github.com', label: 'GitHub', color: 'hover:text-gray-300' },
+        { icon: Github, href: 'https://github.com', label: 'GitHub', color: isDarkMode ? 'hover:text-gray-300' : 'hover:text-gray-900' },
         { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn', color: 'hover:text-blue-400' },
     ];
 
@@ -49,7 +54,10 @@ const Contact = () => {
     return (
         <section
             id="contact"
-            className="h-screen py-20 px-4 md:px-8 lg:px-16 bg-gradient-to-b from-gray-950 via-green-950/20 to-gray-950 snap-start flex flex-col justify-center items-center"
+            className={`min-h-screen py-20 px-4 sm:px-8 lg:px-16 snap-start flex flex-col justify-center items-center ${isDarkMode
+                ? 'bg-gradient-to-b from-gray-950 via-green-950/20 to-gray-950'
+                : 'bg-gradient-to-b from-gray-50 via-green-200/20 to-gray-50'
+                }`}
         >
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
@@ -59,20 +67,27 @@ const Contact = () => {
                 className="w-full max-w-6xl mx-auto"
             >
                 {/* Section Header */}
-                <div className="flex items-center gap-4 mb-12">
-                    <div className="p-3 bg-green-500/20 rounded-lg">
-                        <Mail className="w-8 h-8 text-green-400" />
+                <div className="flex items-center gap-4 mb-8 sm:mb-12">
+                    <div className="p-2 sm:p-3 bg-green-500/20 rounded-lg">
+                        <Mail className="w-6 h-6 sm:w-8 sm:h-8 text-green-400" />
                     </div>
                     <div>
-                        <h2 className="text-4xl md:text-5xl font-bold text-white">
-                            Get In Touch
+                        <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'
+                            }`}>
+                            {t('contact.title')}
                         </h2>
-                        <p className="text-gray-400 mt-2">Occipital Lobe • Visual Processing & Connection</p>
+                        <p className={`mt-2 text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
+                            {t('contact.subtitle')}
+                        </p>
                     </div>
                 </div>
 
                 {/* Main Contact Card  */}
-                <div className="grid lg:grid-cols-12 gap-8 bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 shadow-2xl shadow-green-500/10">
+                <div className={`grid lg:grid-cols-12 gap-6 sm:gap-8 backdrop-blur-sm border rounded-2xl p-6 sm:p-8 shadow-2xl ${isDarkMode
+                    ? 'bg-gray-900/50 border-gray-800 shadow-green-500/10'
+                    : 'bg-white/50 border-gray-200 shadow-green-400/10'
+                    }`}>
                     {/* Left Side Info */}
                     <motion.div
                         className="lg:col-span-5 flex flex-col justify-between"
@@ -82,34 +97,54 @@ const Contact = () => {
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
                         <div>
-                            <h3 className="text-3xl font-bold text-white mb-4 leading-tight">
-                                Let's build the future, <span className="text-green-400">together.</span>
+                            <h3 className={`text-2xl sm:text-3xl font-bold mb-4 leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'
+                                }`}>
+                                {t('contact.heading')} <span className="text-green-400">{t('contact.headingAccent')}</span>
                             </h3>
-                            <p className="text-gray-300 mb-8">
-                                Have an idea? A project? Or just want to talk about tech? My inbox is always open.
+                            <p className={`mb-6 sm:mb-8 text-sm sm:text-base ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                                }`}>
+                                {t('contact.description')}
                             </p>
                         </div>
-                        <div className="space-y-6">
+                        <div className="space-y-4 sm:space-y-6">
                             <div className="flex items-center gap-4">
-                                <div className="p-3 bg-green-500/10 rounded-lg"><Mail className="w-5 h-5 text-green-400" /></div>
-                                <a href="mailto:eonurcogalan@gmail.com" className="text-gray-200 hover:text-green-400 transition-colors">eonurcogalan@gmail.com</a>
+                                <div className="p-2 sm:p-3 bg-green-500/10 rounded-lg">
+                                    <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
+                                </div>
+                                <a
+                                    href="mailto:eonurcogalan@gmail.com"
+                                    className={`text-sm sm:text-base transition-colors ${isDarkMode
+                                        ? 'text-gray-200 hover:text-green-400'
+                                        : 'text-gray-800 hover:text-green-500'
+                                        }`}>
+                                    eonurcogalan@gmail.com
+                                </a>
                             </div>
                             <div className="flex items-center gap-4">
-                                <div className="p-3 bg-green-500/10 rounded-lg"><MapPin className="w-5 h-5 text-green-400" /></div>
-                                <p className="text-gray-200">Izmir, TR</p>
+                                <div className="p-2 sm:p-3 bg-green-500/10 rounded-lg">
+                                    <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
+                                </div>
+                                <p className={`text-sm sm:text-base ${isDarkMode ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>
+                                    Izmir, TR
+                                </p>
                             </div>
-                            <div className="flex gap-3 pt-4 border-t border-gray-800">
+                            <div className={`flex gap-3 pt-4 border-t ${isDarkMode ? 'border-gray-800' : 'border-gray-200'
+                                }`}>
                                 {socialLinks.map((link) => (
                                     <motion.a
                                         key={link.label}
                                         href={link.href}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className={`p-3 bg-gray-800/50 rounded-lg text-gray-400 transition-all duration-300 ${link.color} hover:scale-110`}
+                                        className={`p-2 sm:p-3 rounded-lg transition-all duration-300 hover:scale-110 ${isDarkMode
+                                            ? 'bg-gray-800/50 text-gray-400'
+                                            : 'bg-gray-200/50 text-gray-600'
+                                            } ${link.color}`}
                                         whileHover={{ y: -2 }}
                                         whileTap={{ scale: 0.95 }}
                                     >
-                                        <link.icon className="w-6 h-6" />
+                                        <link.icon className="w-5 h-5 sm:w-6 sm:h-6" />
                                     </motion.a>
                                 ))}
                             </div>
@@ -117,7 +152,6 @@ const Contact = () => {
                     </motion.div>
 
                     {/* Right Side: Form */}
-
                     <motion.div
                         className="lg:col-span-7"
                         initial="hidden"
@@ -125,21 +159,59 @@ const Contact = () => {
                         viewport={{ once: true, amount: 0.3 }}
                         transition={{ staggerChildren: 0.1, delayChildren: 0.4 }}
                     >
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="grid md:grid-cols-2 gap-6">
-                                <motion.input variants={inputVariant} type="text" name="name" value={formData.name} onChange={handleChange} required className="form-input" placeholder="Name" />
-                                <motion.input variants={inputVariant} type="email" name="email" value={formData.email} onChange={handleChange} required className="form-input" placeholder="Email" />
+                        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                            <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
+                                <motion.input
+                                    variants={inputVariant}
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                    className="form-input"
+                                    placeholder={t('contact.form.name')}
+                                />
+                                <motion.input
+                                    variants={inputVariant}
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    className="form-input"
+                                    placeholder={t('contact.form.email')}
+                                />
                             </div>
-                            <motion.input variants={inputVariant} type="text" name="subject" value={formData.subject} onChange={handleChange} required className="form-input" placeholder="Subject" />
-                            <motion.textarea variants={inputVariant} name="message" value={formData.message} onChange={handleChange} required rows={5} className="form-input" placeholder="Your Message..." />
+                            <motion.input
+                                variants={inputVariant}
+                                type="text"
+                                name="subject"
+                                value={formData.subject}
+                                onChange={handleChange}
+                                required
+                                className="form-input"
+                                placeholder={t('contact.form.subject')}
+                            />
+                            <motion.textarea
+                                variants={inputVariant}
+                                name="message"
+                                value={formData.message}
+                                onChange={handleChange}
+                                required
+                                rows={5}
+                                className="form-input"
+                                placeholder={t('contact.form.message')}
+                            />
 
                             <motion.button
                                 variants={inputVariant}
                                 type="submit"
                                 disabled={isSubmitting}
-                                className={`w-full py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 text-lg
+                                className={`w-full py-3 sm:py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 text-base sm:text-lg
                                     ${isSubmitting
-                                        ? 'bg-gray-800 text-gray-400 cursor-not-allowed'
+                                        ? isDarkMode
+                                            ? 'bg-gray-800 text-gray-400 cursor-not-allowed'
+                                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                         : submitStatus === 'success'
                                             ? 'bg-green-600 text-white'
                                             : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-green-500/25'
@@ -148,18 +220,19 @@ const Contact = () => {
                             >
                                 {isSubmitting ? (
                                     <>
-                                        <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-                                        <span>Sending...</span>
+                                        <div className={`w-5 h-5 border-2 border-t-transparent rounded-full animate-spin ${isDarkMode ? 'border-gray-400' : 'border-gray-500'
+                                            }`} />
+                                        <span>{t('contact.form.sending')}</span>
                                     </>
                                 ) : submitStatus === 'success' ? (
                                     <>
                                         <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">✓</div>
-                                        <span>Message Sent!</span>
+                                        <span>{t('contact.form.sent')}</span>
                                     </>
                                 ) : (
                                     <>
                                         <Send className='w-5 h-5' />
-                                        <span>Send Message</span>
+                                        <span>{t('contact.form.send')}</span>
                                     </>
                                 )}
                             </motion.button>

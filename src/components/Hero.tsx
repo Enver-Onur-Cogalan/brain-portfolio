@@ -1,7 +1,12 @@
 import { motion } from "framer-motion";
 import { ChevronDown, Brain } from 'lucide-react';
+import { useTranslation } from "../locales/translations";
+import useUI from "../store/useUI";
 
 const Hero = () => {
+    const { t } = useTranslation();
+    const { isDarkMode } = useUI();
+
     const scrollToAbout = () => {
         document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -9,15 +14,17 @@ const Hero = () => {
     return (
         <section
             id="hero"
-            // DEĞİŞİKLİK: snap-start eklendi ve min-h-screen -> h-screen oldu
-            className="relative h-screen flex flex-col items-center justify-center overflow-hidden snap-start"
+            className="relative h-screen flex flex-col items-center justify-center overflow-hidden snap-start px-4"
         >
             {/* Background gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-transparent to-pink-900/20" />
+            <div className={`absolute inset-0 ${isDarkMode
+                ? 'bg-gradient-to-b from-purple-900/20 via-transparent to-pink-900/20 opacity-100'
+                : 'bg-gradient-to-b from-purple-200/30 via-transparent to-pink-200/30 opacity-100'
+                }`} />
 
             {/* Content */}
             <motion.div
-                className="relative z-10 text-center px-4"
+                className="relative z-10 text-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
@@ -33,31 +40,38 @@ const Hero = () => {
                         ease: 'linear'
                     }}
                 >
-                    <Brain className="w-24 h-24 mx-auto text-brain-400" />
+                    <Brain className="w-20 h-20 sm:w-24 sm:h-24 mx-auto text-brain-400" />
                 </motion.div>
 
-                <h1 className="text-5xl md:text-7xl font-bold mb-4">
-                    <span className="gradient-text">Neural Portfolio</span>
+                <h1 className="text-4xl md:text-7xl font-bold mb-4">
+                    <span className="gradient-text">{t('hero.title')}</span>
                 </h1>
 
-                <p className="text-xl md:text-2xl text-gray-300 mb-8">
-                    Exploring the intersection of Biology & Technology
+                <p className={`text-lg md:text-xl mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
+                    {t('hero.subtitle')}
                 </p>
 
                 <motion.p
-                    className="text-lg text-gray-400 mb-12"
+                    className={`text-base sm:text-lg mb-12 transition-colors duration-300 ${isDarkMode
+                        ? 'text-gray-400 hover:text-brain-400'
+                        : 'text-gray-600 hover:text-brain-500'
+                        }`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
                 >
-                    Navigate through the lobes of my digital brain
+                    {t('hero.description')}
                 </motion.p>
             </motion.div>
 
             {/* Scroll indicator */}
             <motion.button
                 onClick={scrollToAbout}
-                className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-gray-400 hover:text-brain-400 transition-colors"
+                className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 transition-colors duration-300 ${isDarkMode
+                    ? 'text-gray-400 hover:text-brain-400'
+                    : 'text-gray-600 hover:text-brain-500'
+                    }`}
                 animate={{
                     y: [0, 10, 0],
                 }}
@@ -68,7 +82,7 @@ const Hero = () => {
                 }}
             >
                 <div className="flex flex-col items-center gap-2">
-                    <span className="text-sm">Scroll to explore</span>
+                    <span className="text-sm">{t('hero.scroll')}</span>
                     <ChevronDown className="w-6 h-6" />
                 </div>
             </motion.button>

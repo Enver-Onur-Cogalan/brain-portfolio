@@ -1,37 +1,45 @@
 @import "tailwindcss";
 
+@theme {
+    --color-brain-400: #f472b6;
+    --color-brain-500: #ec4899;
+    --color-brain-600: #db2777;
+    --color-brain-900: #831843;
+}
+
 /* Custom scrollbar */
-/* DEĞİŞİKLİK: Scrollbar'ı gizlemek için display: none ekledik */
 ::-webkit-scrollbar {
     display: none;
 }
 
-/* DEĞİŞİKLİK: Firefox için de gizleme kuralı ekledik */
 html {
     scroll-behavior: smooth;
     scrollbar-width: none;
-    /* Firefox */
 }
 
-/* Base styles */
+/* Base styles with theme support */
 body {
-    background-color: rgb(3 7 18);
-    color: rgb(243 244 246);
-    overflow-x: hidden;
     margin: 0;
     font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+/* Dark mode styles */
+body.dark {
+    background-color: rgb(3 7 18);
+    color: rgb(243 244 246);
+}
+
+/* Light mode styles */
+body:not(.dark) {
+    background-color: rgb(249 250 251);
+    color: rgb(31 41 55);
 }
 
 #root {
     min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
-
-/* Remove default styles
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-} */
 
 /* Loading spinner for 3D content */
 .loader {
@@ -41,6 +49,16 @@ body {
     width: 48px;
     height: 48px;
     animation: spin 1s linear infinite;
+}
+
+.dark .loader {
+    border-color: rgba(255, 255, 255, 0.1);
+    border-top-color: #ec4899;
+}
+
+body:not(.dark) .loader {
+    border-color: rgba(0, 0, 0, 0.1);
+    border-top-color: #ec4899;
 }
 
 @keyframes spin {
@@ -115,11 +133,15 @@ section {
     position: relative;
 }
 
-/* Smooth transitions */
-* {
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+/* Smooth transitions - sadece gerekli property'ler */
+button,
+a,
+input,
+textarea,
+.transition-colors {
+    transition-property: color, background-color, border-color, opacity;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
+    transition-duration: 200ms;
 }
 
 /* Focus styles */
@@ -132,6 +154,9 @@ textarea:focus {
 
 button:focus-visible,
 input:focus-visible,
+textarea:focus-visible {
+    outline-offset: 2px;
+}
 
 /* Hover animations */
 .hover-lift {
@@ -161,8 +186,27 @@ input:focus-visible,
         @apply py-20 px-4 md:px-8 lg:px-16;
     }
 
+    /* Form input with proper theme support */
     .form-input {
-        @apply w-full bg-transparent border-b-2 border-gray-700 focus:border-green-500 text-white placeholder-gray-500 transition-colors duration-300 ease-in-out outline-none py-3;
+        @apply w-full bg-transparent border-b-2 py-3 outline-none transition-all duration-300;
+    }
+
+    /* Dark mode form input */
+    .dark .form-input {
+        @apply border-gray-700 text-gray-100 placeholder-gray-500;
+    }
+
+    .dark .form-input:focus {
+        @apply border-brain-500;
+    }
+
+    /* Light mode form input */
+    body:not(.dark) .form-input {
+        @apply border-gray-300 text-gray-900 placeholder-gray-500;
+    }
+
+    body:not(.dark) .form-input:focus {
+        @apply border-brain-500;
     }
 }
 
@@ -173,8 +217,46 @@ input:focus-visible,
 
     .section-container {
         -ms-overflow-style: none;
-        /* IE and Edge */
         scrollbar-width: none;
-        /* Firefox */
+    }
+
+    /* Text color utilities for theme */
+    .text-theme-primary {
+        @apply text-gray-900 dark:text-white;
+    }
+
+    .text-theme-secondary {
+        @apply text-gray-600 dark:text-gray-400;
+    }
+
+    .text-theme-tertiary {
+        @apply text-gray-500 dark:text-gray-500;
+    }
+
+    /* Background utilities for theme */
+    .bg-theme-primary {
+        @apply bg-white dark:bg-gray-900;
+    }
+
+    .bg-theme-secondary {
+        @apply bg-gray-50 dark:bg-gray-950;
+    }
+
+    /* Border utilities for theme */
+    .border-theme {
+        @apply border-gray-200 dark:border-gray-800;
+    }
+}
+
+/* Responsive text sizing */
+@media (max-width: 640px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 380px) {
+    html {
+        font-size: 13px;
     }
 }
