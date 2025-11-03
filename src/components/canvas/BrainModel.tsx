@@ -106,14 +106,14 @@ const vertexShader = `
 const fragmentShader = `
   uniform vec3 uColor;
   uniform float uOpacity;
+  uniform vec3 uTrailColor;
 
   varying float vTrailIntensity;
 
   void main() {
     if (length(gl_PointCoord - vec2(0.5, 0.5)) > 0.475) discard;
 
-    vec3 neonPink = vec3(1.0, 0.2, 0.8);
-    vec3 finalColor = mix(uColor, neonPink, vTrailIntensity * 0.6);
+    vec3 finalColor = mix(uColor, uTrailColor, vTrailIntensity * 0.6);
 
     gl_FragColor = vec4(finalColor, uOpacity);
   }
@@ -122,6 +122,7 @@ const fragmentShader = `
 const ParticlesMaterial = shaderMaterial({
   uTime: 0, uAmplitude: 0.006, uFrequency: 3.0,
   uColor: new THREE.Color(0.6, 0.8, 1.0),
+  uTrailColor: new THREE.Color(1.0, 0.2, 0.8),
   uPointer: new THREE.Vector2(0, 0),
   uRadius: 0.1, uStrength: 0.2,
   uOpacity: 1.0,
@@ -137,7 +138,7 @@ extend({ ParticlesMaterial });
 declare module '@react-three/fiber' {
   interface ThreeElements {
     particlesMaterial: JSX.IntrinsicElements['shaderMaterial'] & {
-      uTime?: number; uColor?: THREE.Color; uPointer?: THREE.Vector2;
+      uTime?: number; uColor?: THREE.Color; uTrailColor?: THREE.Color; uPointer?: THREE.Vector2;
       uAmplitude?: number; uFrequency?: number;
       uOpacity?: number; uDisintegration?: number; uFallOffset?: number;
       uBreathing?: number; uTrailPositions?: THREE.Vector2[]; uTrailStrengths?: number[];
@@ -147,7 +148,7 @@ declare module '@react-three/fiber' {
 
 export function BrainModel() {
   const { scene } = useGLTF('/brain_hologram.glb');
-  const { isSceneLoaded, setSceneLoaded, transitionPhase } = useUI();
+  const { isSceneLoaded, setSceneLoaded, transitionPhase, isDarkMode } = useUI();
 
   const delayedPointer = useRef(new THREE.Vector2(0, 0));
 
@@ -190,8 +191,14 @@ export function BrainModel() {
       trailStrengths.current[i] *= 0.92;
     }
 
-    const blueColor = new THREE.Color(0.6, 0.8, 1.0);
-    const lightPurpleColor = new THREE.Color(0.75, 0.65, 0.95);
+    // Tema bazlı renkler
+    const darkModeBlue = new THREE.Color(0.6, 0.8, 1.0);
+    const darkModePurple = new THREE.Color(0.75, 0.65, 0.95);
+    const darkModeTrail = new THREE.Color(1.0, 0.2, 0.8);
+
+    const lightModeBlue = new THREE.Color(0.2, 0.3, 1.0);
+    const lightModePurple = new THREE.Color(0.55, 0.45, 0.65);
+    const lightModeTrail = new THREE.Color(0.9, 0.3, 0.6);
 
     points.children.forEach(child => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -206,39 +213,51 @@ export function BrainModel() {
         let targetDisintegration = 0.0;
         let targetFallOffset = 0.0;
         let targetBreathing = 1.0;
-        let targetColor = blueColor;
+        let targetColor: THREE.Color;
+        let targetTrailColor: THREE.Color;
+
+        // Tema bazlı renk seçimi
+        const baseColor = isDarkMode ? darkModeBlue : lightModeBlue;
+        const transitionColor = isDarkMode ? darkModePurple : lightModePurple;
+        const trailColor = isDarkMode ? darkModeTrail : lightModeTrail;
 
         if (transitionPhase === 'dissolving') {
           targetOpacity = 1.0;
           targetDisintegration = 0.5;
           targetFallOffset = 0.0;
           targetBreathing = 0.0;
-          targetColor = lightPurpleColor;
+          targetColor = transitionColor;
+          targetTrailColor = trailColor
 
         } else if (transitionPhase === 'gathering') {
           targetOpacity = 1.0;
           targetDisintegration = 0.0;
           targetFallOffset = 0.0;
           targetBreathing = 1.0;
-          targetColor = blueColor;
+          targetColor = baseColor;
+          targetTrailColor = trailColor;
 
         } else {
           targetOpacity = 1.0;
           targetDisintegration = 0.0;
           targetFallOffset = 0.0;
           targetBreathing = 1.0;
-          targetColor = blueColor;
+          targetColor = baseColor;
+          targetTrailColor = trailColor;
         }
 
         const opacitySpeed = 0.05
         const disintSpeed = transitionPhase === 'dissolving' ? 0.08 : 0.06;
         const fallSpeed = 0.06;
+        const colorSpeed = 0.04;
 
         material.uOpacity = THREE.MathUtils.lerp(material.uOpacity, targetOpacity, opacitySpeed);
         material.uDisintegration = THREE.MathUtils.lerp(material.uDisintegration || 0, targetDisintegration, disintSpeed);
         material.uFallOffset = THREE.MathUtils.lerp(material.uFallOffset || 0, targetFallOffset, fallSpeed);
         material.uBreathing = THREE.MathUtils.lerp(material.uBreathing || 1, targetBreathing, 0.03);
-        material.uColor.lerp(targetColor, 0.04);
+
+        material.uColor.lerp(targetColor, colorSpeed);
+        material.uTrailColor.lerp(targetTrailColor, colorSpeed);
       }
     });
   });
