@@ -15,7 +15,7 @@ const projects = [
 
 const Projects = () => {
     const { t } = useTranslation();
-    const { isDarkMode } = useUI();
+    const { isDarkMode, language } = useUI();
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -55,6 +55,12 @@ const Projects = () => {
         },
     };
 
+    const textVariants = {
+        exit: { y: -20, opacity: 0, transition: { duration: 0.2 } },
+        enter: { y: 20, opacity: 0 },
+        center: { y: 0, opacity: 1, transition: { duration: 0.3 } }
+    };
+
     return (
         <section id="projects" className="min-h-screen py-20 sm:py-24 px-4 sm:px-8 md:px-12 lg:px-16 snap-start flex flex-col justify-center">
             <motion.div
@@ -69,12 +75,36 @@ const Projects = () => {
                         <FolderOpen className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
                     </div>
                     <div>
-                        <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                            {t('projects.work')}
-                        </h2>
-                        <p className={`mt-2 text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            {t('projects.workSubtitle')}
-                        </p>
+                        <div className="overflow-hidden">
+                            <AnimatePresence mode="wait">
+                                <motion.h2
+                                    key={language + '-projects-title'}
+                                    variants={textVariants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    className={`text-3xl sm:text-4xl md:text-5xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'
+                                        }`}
+                                >
+                                    {t('projects.work')}
+                                </motion.h2>
+                            </AnimatePresence>
+                        </div>
+                        <div className="overflow-hidden">
+                            <AnimatePresence mode="wait">
+                                <motion.p
+                                    key={language + '-projects-subtitle'}
+                                    variants={textVariants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    className={`mt-2 text-sm sm:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                                        }`}
+                                >
+                                    {t('projects.workSubtitle')}
+                                </motion.p>
+                            </AnimatePresence>
+                        </div>
                     </div>
                 </div>
                 {/* Animation band */}

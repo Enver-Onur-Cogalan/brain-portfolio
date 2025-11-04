@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Mail, Github, Linkedin, MapPin, Send } from "lucide-react";
 import React, { useState } from "react";
 import { useTranslation } from "../locales/translations";
@@ -6,7 +6,7 @@ import useUI from "../store/useUI";
 
 const Contact = () => {
     const { t } = useTranslation();
-    const { isDarkMode } = useUI();
+    const { isDarkMode, language } = useUI();
 
     const [formData, setFormData] = useState({
         name: '',
@@ -51,6 +51,12 @@ const Contact = () => {
         visible: { opacity: 1, y: 0 },
     };
 
+    const textVariants = {
+        exit: { y: -20, opacity: 0, transition: { duration: 0.2 } },
+        enter: { y: 20, opacity: 0 },
+        center: { y: 0, opacity: 1, transition: { duration: 0.3 } }
+    };
+
     return (
         <section
             id="contact"
@@ -72,14 +78,36 @@ const Contact = () => {
                         <Mail className="w-6 h-6 sm:w-8 sm:h-8 text-green-400" />
                     </div>
                     <div>
-                        <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'
-                            }`}>
-                            {t('contact.title')}
-                        </h2>
-                        <p className={`mt-2 text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                            }`}>
-                            {t('contact.subtitle')}
-                        </p>
+                        <div className="overflow-hidden">
+                            <AnimatePresence mode="wait">
+                                <motion.h2
+                                    key={language + '-contact-title'}
+                                    variants={textVariants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    className={`text-3xl sm:text-4xl md:text-5xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'
+                                        }`}
+                                >
+                                    {t('contact.title')}
+                                </motion.h2>
+                            </AnimatePresence>
+                        </div>
+                        <div className="overflow-hidden">
+                            <AnimatePresence mode="wait">
+                                <motion.p
+                                    key={language + '-contact-subtitle'}
+                                    variants={textVariants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    className={`mt-2 text-sm sm:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                                        }`}
+                                >
+                                    {t('contact.subtitle')}
+                                </motion.p>
+                            </AnimatePresence>
+                        </div>
                     </div>
                 </div>
 
@@ -97,14 +125,36 @@ const Contact = () => {
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
                         <div>
-                            <h3 className={`text-2xl sm:text-3xl font-bold mb-4 leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'
-                                }`}>
-                                {t('contact.heading')} <span className="text-green-400">{t('contact.headingAccent')}</span>
-                            </h3>
-                            <p className={`mb-6 sm:mb-8 text-sm sm:text-base ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                                }`}>
-                                {t('contact.description')}
-                            </p>
+                            <div className="overflow-hidden">
+                                <AnimatePresence mode="wait">
+                                    <motion.h3
+                                        key={language + '-contact-heading'}
+                                        variants={textVariants}
+                                        initial="enter"
+                                        animate="center"
+                                        exit="exit"
+                                        className={`text-2xl sm:text-3xl font-bold mb-4 leading-tight transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'
+                                            }`}
+                                    >
+                                        {t('contact.heading')} <span className="text-green-400">{t('contact.headingAccent')}</span>
+                                    </motion.h3>
+                                </AnimatePresence>
+                            </div>
+                            <div className="overflow-hidden">
+                                <AnimatePresence mode="wait">
+                                    <motion.p
+                                        key={language + '-contact-desc'}
+                                        variants={textVariants}
+                                        initial="enter"
+                                        animate="center"
+                                        exit="exit"
+                                        className={`mb-6 sm:mb-8 text-sm sm:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                                            }`}
+                                    >
+                                        {t('contact.description')}
+                                    </motion.p>
+                                </AnimatePresence>
+                            </div>
                         </div>
                         <div className="space-y-4 sm:space-y-6">
                             <div className="flex items-center gap-4">
@@ -222,17 +272,44 @@ const Contact = () => {
                                     <>
                                         <div className={`w-5 h-5 border-2 border-t-transparent rounded-full animate-spin ${isDarkMode ? 'border-gray-400' : 'border-gray-500'
                                             }`} />
-                                        <span>{t('contact.form.sending')}</span>
+                                        <AnimatePresence mode="wait">
+                                            <motion.span
+                                                key={language + '-sending'}
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                            >
+                                                {t('contact.form.sending')}
+                                            </motion.span>
+                                        </AnimatePresence>
                                     </>
                                 ) : submitStatus === 'success' ? (
                                     <>
                                         <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">✓</div>
-                                        <span>{t('contact.form.sent')}</span>
+                                        <AnimatePresence mode="wait">
+                                            <motion.span
+                                                key={language + '-sent'}
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                            >
+                                                {t('contact.form.sent')}
+                                            </motion.span>
+                                        </AnimatePresence>
                                     </>
                                 ) : (
                                     <>
                                         <Send className='w-5 h-5' />
-                                        <span>{t('contact.form.send')}</span>
+                                        <AnimatePresence mode="wait">
+                                            <motion.span
+                                                key={language + '-send'}
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                            >
+                                                {t('contact.form.send')}
+                                            </motion.span>
+                                        </AnimatePresence>
                                     </>
                                 )}
                             </motion.button>

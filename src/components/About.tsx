@@ -1,17 +1,23 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { User, Award, Target, Coffee } from "lucide-react";
 import { useTranslation } from "../locales/translations";
 import useUI from "../store/useUI";
 
 const About = () => {
     const { t } = useTranslation();
-    const { isDarkMode } = useUI();
+    const { isDarkMode, language } = useUI();
 
     const stats = [
         { icon: Award, label: t('about.experience'), value: '0.16+' },
         { icon: Target, label: t('about.projects'), value: '50+' },
         { icon: Coffee, label: t('about.coffee'), value: '∞' },
     ];
+
+    const textVariants = {
+        exit: { y: -20, opacity: 0, transition: { duration: 0.2 } },
+        enter: { y: 20, opacity: 0 },
+        center: { y: 0, opacity: 1, transition: { duration: 0.3 } }
+    };
 
     return (
         <section
@@ -31,16 +37,36 @@ const About = () => {
                             <User className="w-6 h-6 sm:w-8 sm:h-8 text-brain-400" />
                         </div>
                         <div>
-                            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold ${isDarkMode
-                                ? 'text-white'
-                                : 'text-gray-900'
-                                }`}>
-                                {t('about.title')}
-                            </h2>
-                            <p className={`mt-2 text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                                }`}>
-                                {t('about.subtitle')}
-                            </p>
+                            <div className="overflow-hidden">
+                                <AnimatePresence mode="wait">
+                                    <motion.h2
+                                        key={language + '-about-title'}
+                                        variants={textVariants}
+                                        initial="enter"
+                                        animate="center"
+                                        exit="exit"
+                                        className={`text-3xl sm:text-4xl md:text-5xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'
+                                            }`}
+                                    >
+                                        {t('about.title')}
+                                    </motion.h2>
+                                </AnimatePresence>
+                            </div>
+                            <div className="overflow-hidden">
+                                <AnimatePresence mode="wait">
+                                    <motion.p
+                                        key={language + '-about-subtitle'}
+                                        variants={textVariants}
+                                        initial="enter"
+                                        animate="center"
+                                        exit="exit"
+                                        className={`mt-2 text-sm sm:text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                                            }`}
+                                    >
+                                        {t('about.subtitle')}
+                                    </motion.p>
+                                </AnimatePresence>
+                            </div>
                         </div>
                     </div>
 
@@ -57,13 +83,48 @@ const About = () => {
                     >
                         <div className="grid md:grid-cols-5">
                             <div className="md:col-span-3 p-6 sm:p-8 md:p-12">
-                                <h3 className="text-xl sm:text-2xl font-semibold text-brain-400 mb-4 sm:mb-6">
-                                    {t('about.heading')}
-                                </h3>
+                                <div className="overflow-hidden">
+                                    <AnimatePresence mode="wait">
+                                        <motion.h3
+                                            key={language + '-about-heading'}
+                                            variants={textVariants}
+                                            initial="enter"
+                                            animate="center"
+                                            exit="exit"
+                                            className="text-xl sm:text-2xl font-semibold text-brain-400 mb-4 sm:mb-6"
+                                        >
+                                            {t('about.heading')}
+                                        </motion.h3>
+                                    </AnimatePresence>
+                                </div>
                                 <div className={`space-y-4 leading-relaxed text-sm sm:text-base ${isDarkMode ? 'text-gray-300/90' : 'text-gray-700'
                                     }`}>
-                                    <p>{t('about.p1')}</p>
-                                    <p>{t('about.p2')}</p>
+                                    <div className="overflow-hidden">
+                                        <AnimatePresence mode="wait">
+                                            <motion.p
+                                                key={language + '-about-p1'}
+                                                variants={textVariants}
+                                                initial="enter"
+                                                animate="center"
+                                                exit="exit"
+                                            >
+                                                {t('about.p1')}
+                                            </motion.p>
+                                        </AnimatePresence>
+                                    </div>
+                                    <div className="overflow-hidden">
+                                        <AnimatePresence mode="wait">
+                                            <motion.p
+                                                key={language + '-about-p2'}
+                                                variants={textVariants}
+                                                initial="enter"
+                                                animate="center"
+                                                exit="exit"
+                                            >
+                                                {t('about.p2')}
+                                            </motion.p>
+                                        </AnimatePresence>
+                                    </div>
                                 </div>
                             </div>
 
@@ -71,10 +132,21 @@ const About = () => {
                                 ? 'bg-gray-900/30 border-gray-800'
                                 : 'bg-gray-100/30 border-gray-200'
                                 }`}>
-                                <h4 className={`text-base sm:text-lg font-semibold mb-6 sm:mb-8 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'
-                                    }`}>
-                                    {t('about.metrics')}
-                                </h4>
+                                <div className="overflow-hidden">
+                                    <AnimatePresence mode="wait">
+                                        <motion.h4
+                                            key={language + '-about-metrics'}
+                                            variants={textVariants}
+                                            initial="enter"
+                                            animate="center"
+                                            exit="exit"
+                                            className={`text-base sm:text-lg font-semibold mb-6 sm:mb-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'
+                                                }`}
+                                        >
+                                            {t('about.metrics')}
+                                        </motion.h4>
+                                    </AnimatePresence>
+                                </div>
                                 <div className="space-y-6 sm:space-y-8">
                                     {stats.map((stat, index) => {
                                         const Icon = stat.icon;
@@ -114,10 +186,21 @@ const About = () => {
                         transition={{ delay: 0.4, duration: 0.8 }}
                         className="mt-12 sm:mt-16 text-center max-w-3xl mx-auto px-4"
                     >
-                        <p className={`text-base sm:text-lg md:text-xl italic leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                            }`}>
-                            "{t('about.quote')}"
-                        </p>
+                        <div className="overflow-hidden">
+                            <AnimatePresence mode="wait">
+                                <motion.p
+                                    key={language + '-about-quote'}
+                                    variants={textVariants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    className={`text-base sm:text-lg md:text-xl italic leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                                        }`}
+                                >
+                                    "{t('about.quote')}"
+                                </motion.p>
+                            </AnimatePresence>
+                        </div>
                     </motion.blockquote>
                 </motion.div>
             </div>

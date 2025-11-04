@@ -15,6 +15,8 @@ import { useScrollProgress } from './hooks/useScrollProgress';
 import { useEffect, useRef, type RefObject } from 'react';
 import { useScrollTransition } from './hooks/useScrollTransition';
 import { useTranslation } from './locales/translations';
+import { useLanguageTransition } from './hooks/useLanguageTransition';
+import { useThemeTransition, getPainOverlayStyle } from './hooks/useThemeTransition';
 
 function App() {
   const {
@@ -28,6 +30,8 @@ function App() {
   } = useUI();
 
   const { t } = useTranslation();
+  const languageTransition = useLanguageTransition(language);
+  const themeTransition = useThemeTransition(isDarkMode);
 
   const mainContainerRef = useRef<HTMLDivElement>(null);
 
@@ -44,16 +48,14 @@ function App() {
     const root = document.documentElement;
     const body = document.body;
 
-    if (isDarkMode) {
-      root.classList.add('dark');
-      body.classList.add('dark');
-      body.style.backgroundColor = 'rgb(3 7 18)';
-      body.style.color = 'rgb(243 244 246)';
-    } else {
-      root.classList.remove('dark');
-      body.classList.remove('dark');
-      body.style.backgroundColor = 'rgb(249 250 251)';
-      body.style.color = 'rgb(31 41 55)';
+    if (themeTransition.phase === 'idle') {
+      if (isDarkMode) {
+        root.classList.add('dark');
+        body.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+        body.classList.remove('dark');
+      }
     }
   }, [isDarkMode]);
 
@@ -66,9 +68,44 @@ function App() {
     { id: 'contact', label: t('nav.contact') },
   ];
 
+  // Text animation variants for language transition
+  const getTextVariants = () => {
+    const direction = languageTransition.direction;
+    return {
+      exit: {
+        y: direction === 'up' ? -30 : 30,
+        opacity: 0,
+        transition: { duration: 0.2, ease: [0.43, 0.13, 0.23, 0.96] }
+      },
+      enter: {
+        y: direction === 'up' ? 30 : -30,
+        opacity: 0,
+      },
+      center: {
+        y: 0,
+        opacity: 1,
+        transition: { duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }
+      }
+    }
+  }
+
   return (
     <div className={`relative min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-950' : 'bg-gray-50'
       }`}>
+
+      {/* Theme Paint Overlay */}
+      <AnimatePresence>
+        {themeTransition.phase === 'painting' && (
+          <motion.div
+            style={getPainOverlayStyle(themeTransition.progress, isDarkMode)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Navigation */}
       <motion.nav
         initial={{ y: -100 }}
@@ -89,9 +126,18 @@ function App() {
               whileTap={{ scale: 0.95 }}
             >
               <Brain className="w-8 h-8 text-brain-400" />
-              <span className="text-xl font-bold gradient-text">
-                {t('hero.title')}
-              </span>
+              <AnimatePresence mode='wait'>
+                <motion.span
+                  key={language + '-logo'}
+                  variants={getTextVariants()}
+                  initial='enter'
+                  animate='center'
+                  exit='exit'
+                  className='text-xl font-bold gradient-text'
+                >
+                  {t('hero.title')}
+                </motion.span>
+              </AnimatePresence>
             </motion.div>
 
             {/* Desktop Navigation */}
@@ -108,7 +154,18 @@ function App() {
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {item.label}
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={language + '-' + item.id}
+                      variants={getTextVariants()}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      className="block"
+                    >
+                      {item.label}
+                    </motion.span>
+                  </AnimatePresence>
                   {currentSection === item.id && (
                     <motion.div
                       layoutId="nav-indicator"
@@ -134,7 +191,18 @@ function App() {
               >
                 <div className='flex items-center gap-1'>
                   <Languages className='w-4 h-4' />
-                  <span className='hidden sm:inline'>{language.toUpperCase()}</span>
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={language}
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -20, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className='hidden sm:inline'
+                    >
+                      {language.toUpperCase()}
+                    </motion.span>
+                  </AnimatePresence>
                 </div>
               </motion.button>
 
@@ -153,20 +221,20 @@ function App() {
                   {isDarkMode ? (
                     <motion.div
                       key="sun"
-                      initial={{ rotate: -180, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: 180, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
+                      initial={{ rotate: -180, opacity: 0, scale: 0.5 }}
+                      animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                      exit={{ rotate: 180, opacity: 0, scale: 0.5 }}
+                      transition={{ duration: 0.2, ease: [0.43, 0.13, 0.23, 0.96] }}
                     >
                       <Sun className="w-5 h-5" />
                     </motion.div>
                   ) : (
                     <motion.div
                       key="moon"
-                      initial={{ rotate: -180, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: 180, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
+                      initial={{ rotate: -180, opacity: 0, scale: 0.5 }}
+                      animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                      exit={{ rotate: 180, opacity: 0, scale: 0.5 }}
+                      transition={{ duration: 0.2, ease: [0.43, 0.13, 0.23, 0.96] }}
                     >
                       <Moon className="w-5 h-5" />
                     </motion.div>
@@ -180,7 +248,7 @@ function App() {
 
       {/* Progress Bar */}
       <motion.div
-        className={`fixed top-16 left-0 right-0 h-1 z-40 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'
+        className={`fixed top-16 left-0 right-0 h-1 z-40 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'
           }`}
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
@@ -210,7 +278,18 @@ function App() {
                   }`}
                 whileTap={{ scale: 0.9 }}
               >
-                <span className="text-xs">{item.label}</span>
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={language + '-mobile-' + item.id}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-xs"
+                  >
+                    {item.label}
+                  </motion.span>
+                </AnimatePresence>
               </motion.button>
             ))}
           </div>
@@ -218,7 +297,8 @@ function App() {
       </div>
 
       {/* Main Content */}
-      <main ref={mainContainerRef} className="h-screen overflow-y-auto overflow-x-hidden scroll-smooth">
+      <main ref={mainContainerRef} className={`h-screen overflow-y-auto overflow-x-hidden scroll-smooth transition-colors duration-300 ${isDarkMode ? 'bg-gray-950' : 'bg-gray-50'
+        }`}>
         <BrainCanvas />
 
         <div id='hero' className='h-screen pointer-events-none'>
@@ -262,9 +342,18 @@ function App() {
           >
             <div className="text-center">
               <div className="loader mb-4 mx-auto" />
-              <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
-                {t('loading.text')}
-              </p>
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={language + '-loading'}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                    }`}
+                >
+                  {t('loading.text')}
+                </motion.p>
+              </AnimatePresence>
             </div>
           </motion.div>
         )}

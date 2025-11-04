@@ -1,11 +1,11 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Code, Database, Beaker, Cpu } from "lucide-react";
 import { useTranslation } from "../locales/translations";
 import useUI from "../store/useUI";
 
 const Skills = () => {
     const { t } = useTranslation();
-    const { isDarkMode } = useUI();
+    const { isDarkMode, language } = useUI();
 
     const skillCategories = [
         {
@@ -54,6 +54,12 @@ const Skills = () => {
         },
     ];
 
+    const textVariants = {
+        exit: { y: -20, opacity: 0, transition: { duration: 0.2 } },
+        enter: { y: 20, opacity: 0 },
+        center: { y: 0, opacity: 1, transition: { duration: 0.3 } }
+    };
+
     return (
         <section
             id="skills"
@@ -75,12 +81,36 @@ const Skills = () => {
                             <Cpu className="w-6 h-6 sm:w-8 sm:h-8 text-purple-400" />
                         </div>
                         <div>
-                            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'
-                                }`}>
-                                {t('skills.title')}
-                            </h2>
-                            <p className={`mt-2 text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                                }`}>{t('skills.subtitle')}</p>
+                            <div className="overflow-hidden">
+                                <AnimatePresence mode="wait">
+                                    <motion.h2
+                                        key={language + '-skills-title'}
+                                        variants={textVariants}
+                                        initial="enter"
+                                        animate="center"
+                                        exit="exit"
+                                        className={`text-3xl sm:text-4xl md:text-5xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'
+                                            }`}
+                                    >
+                                        {t('skills.title')}
+                                    </motion.h2>
+                                </AnimatePresence>
+                            </div>
+                            <div className="overflow-hidden">
+                                <AnimatePresence mode="wait">
+                                    <motion.p
+                                        key={language + '-skills-subtitle'}
+                                        variants={textVariants}
+                                        initial="enter"
+                                        animate="center"
+                                        exit="exit"
+                                        className={`mt-2 text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                                            }`}
+                                    >
+                                        {t('skills.subtitle')}
+                                    </motion.p>
+                                </AnimatePresence>
+                            </div>
                         </div>
                     </div>
 
@@ -94,7 +124,7 @@ const Skills = () => {
                                     initial={{ opacity: 0, y: 30 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ amount: 0.3 }}
-                                    transition={{ delay: categoryIndex * 0.1 }}
+                                    transition={{ delay: 0.2 + categoryIndex * 0.3 }}
                                     className={`p-4 sm:p-6 backdrop-blur-sm rounded-2xl border ${isDarkMode
                                         ? 'bg-gray-900/50 border-gray-800'
                                         : 'bg-white/50 border-gray-200'
@@ -157,10 +187,22 @@ const Skills = () => {
                         transition={{ delay: 0.6 }}
                         className="mt-8 sm:mt-12 text-center"
                     >
-                        <p className={`text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                            }`}>
-                            {t('skills.description')}
-                        </p>
+                        <div className="overflow-hidden">
+                            <AnimatePresence mode="wait">
+                                <motion.p
+                                    key={language + '-skills-desc'}
+                                    variants={textVariants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    className={`text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                                        }`}
+                                >
+                                    {t('skills.description')}
+                                </motion.p>
+                            </AnimatePresence>
+                        </div>
+
                     </motion.div>
                 </motion.div>
             </div>
