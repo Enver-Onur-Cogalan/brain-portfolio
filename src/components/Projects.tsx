@@ -56,9 +56,20 @@ const Projects = () => {
     };
 
     const textVariants = {
-        exit: { y: -20, opacity: 0, transition: { duration: 0.2 } },
-        enter: { y: 20, opacity: 0 },
-        center: { y: 0, opacity: 1, transition: { duration: 0.3 } }
+        exit: {
+            y: -50,
+            opacity: 0,
+            transition: { duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }
+        },
+        enter: {
+            y: 50,
+            opacity: 0
+        },
+        center: {
+            y: 0,
+            opacity: 1,
+            transition: { duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }
+        }
     };
 
     return (

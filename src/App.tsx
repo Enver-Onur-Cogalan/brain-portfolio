@@ -16,7 +16,7 @@ import { useEffect, useRef, type RefObject } from 'react';
 import { useScrollTransition } from './hooks/useScrollTransition';
 import { useTranslation } from './locales/translations';
 import { useLanguageTransition } from './hooks/useLanguageTransition';
-import { useThemeTransition, getPainOverlayStyle } from './hooks/useThemeTransition';
+import { useThemeTransition, getBlurOverlayStyle } from './hooks/useThemeTransition';
 
 function App() {
   const {
@@ -48,7 +48,7 @@ function App() {
     const root = document.documentElement;
     const body = document.body;
 
-    if (themeTransition.phase === 'idle') {
+    if (themeTransition.phase === 'changing' || themeTransition.phase === 'idle') {
       if (isDarkMode) {
         root.classList.add('dark');
         body.classList.add('dark');
@@ -57,7 +57,7 @@ function App() {
         body.classList.remove('dark');
       }
     }
-  }, [isDarkMode]);
+  }, [isDarkMode, themeTransition.phase]);
 
   // Navigation items
   const navItems = [
@@ -89,19 +89,21 @@ function App() {
     }
   }
 
+  const isBlurActive = themeTransition.phase !== 'idle';
+
   return (
     <div className={`relative min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-950' : 'bg-gray-50'
       }`}>
 
       {/* Theme Paint Overlay */}
       <AnimatePresence>
-        {themeTransition.phase === 'painting' && (
+        {isBlurActive && (
           <motion.div
-            style={getPainOverlayStyle(themeTransition.progress, isDarkMode)}
+            style={getBlurOverlayStyle(themeTransition.blurAmount, themeTransition.opacity)}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.1 }}
           />
         )}
       </AnimatePresence>
