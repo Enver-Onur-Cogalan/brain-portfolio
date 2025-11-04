@@ -1,17 +1,29 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { User, Award, Target, Coffee } from "lucide-react";
+import { Award, CheckCircle, Coffee, Crown, Flame, Heart, Medal, Rocket, Star, Target, User, TrendingUp, Trophy, Zap } from "lucide-react";
 import { useTranslation } from "../locales/translations";
 import useUI from "../store/useUI";
+import { useContent } from "../store/useContent";
+
+const iconMap = {
+    Award,
+    Trophy,
+    Medal,
+    Star,
+    Target,
+    Coffee,
+    Zap,
+    Flame,
+    Heart,
+    CheckCircle,
+    TrendingUp,
+    Rocket,
+    Crown
+};
 
 const About = () => {
     const { t } = useTranslation();
     const { isDarkMode, language } = useUI();
-
-    const stats = [
-        { icon: Award, label: t('about.experience'), value: '0.16+' },
-        { icon: Target, label: t('about.projects'), value: '50+' },
-        { icon: Coffee, label: t('about.coffee'), value: '∞' },
-    ];
+    const { about } = useContent();
 
     const textVariants = {
         exit: {
@@ -119,7 +131,7 @@ const About = () => {
                                                 animate="center"
                                                 exit="exit"
                                             >
-                                                {t('about.p1')}
+                                                {about.p1[language]}
                                             </motion.p>
                                         </AnimatePresence>
                                     </div>
@@ -132,7 +144,7 @@ const About = () => {
                                                 animate="center"
                                                 exit="exit"
                                             >
-                                                {t('about.p2')}
+                                                {about.p2[language]}
                                             </motion.p>
                                         </AnimatePresence>
                                     </div>
@@ -159,11 +171,11 @@ const About = () => {
                                     </AnimatePresence>
                                 </div>
                                 <div className="space-y-6 sm:space-y-8">
-                                    {stats.map((stat, index) => {
-                                        const Icon = stat.icon;
+                                    {about.metrics.map((stat, index) => {
+                                        const Icon = iconMap[stat.icon as keyof typeof iconMap];
                                         return (
                                             <motion.div
-                                                key={stat.label}
+                                                key={index}
                                                 className="flex items-center gap-3 sm:gap-4"
                                                 initial={{ opacity: 0, x: 20 }}
                                                 whileInView={{ opacity: 1, x: 0 }}
@@ -179,7 +191,7 @@ const About = () => {
                                                         }`}>{stat.value}</div>
 
                                                     <div className={`text-xs sm:text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                                                        }`}>{stat.label}</div>
+                                                        }`}>{stat.label[language]}</div>
                                                 </div>
                                             </motion.div>
                                         );

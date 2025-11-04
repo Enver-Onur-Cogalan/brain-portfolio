@@ -3,19 +3,13 @@ import { FolderOpen, Github, ArrowLeft, ArrowRight, ChevronDown } from 'lucide-r
 import { useState, useRef, useLayoutEffect } from 'react';
 import { useTranslation } from '../locales/translations';
 import useUI from '../store/useUI';
+import { useContent } from '../store/useContent';
 
-const projects = [
-    { title: 'BioSim Engine', description: 'A 3D cellular simulation platform built with Three.js for visualizing biological processes in real-time.', tags: ['Three.js', 'WebGL', 'React', 'Biology'], github: 'https://github.com', demo: 'https://demo.com', color: 'from-blue-500 to-cyan-500' },
-    { title: 'Neural Network Visualizer', description: 'Interactive tool for understanding deep learning architectures through biological neuron metaphors.', tags: ['TensorFlow.js', 'D3.js', 'Python', 'ML'], github: 'https://github.com', demo: 'https://demo.com', color: 'from-purple-500 to-pink-500' },
-    { title: 'DNA Sequence Analyzer', description: 'Web application for analyzing and visualizing DNA sequences with pattern recognition algorithms.', tags: ['Next.js', 'PostgreSQL', 'Bioinformatics'], github: 'https://github.com', demo: 'https://demo.com', color: 'from-green-500 to-emerald-500' },
-    { title: 'Lab Protocol Manager', description: 'Digital laboratory notebook for managing and sharing research protocols with version control.', tags: ['React', 'Node.js', 'MongoDB', 'REST API'], github: 'https://github.com', demo: 'https://demo.com', color: 'from-orange-500 to-red-500' },
-    { title: 'Protein Folding Predictor', description: 'Machine learning model for predicting protein structures based on amino acid sequences.', tags: ['Python', 'PyTorch', 'AlphaFold', 'Docker'], github: 'https://github.com', demo: 'https://demo.com', color: 'from-indigo-500 to-purple-500' },
-    { title: 'Microscopy Image Processor', description: 'Automated image analysis pipeline for processing and quantifying microscopy data.', tags: ['OpenCV', 'Python', 'React', 'AWS'], github: 'https://github.com', demo: 'https://demo.com', color: 'from-pink-500 to-rose-500' },
-];
 
 const Projects = () => {
     const { t } = useTranslation();
     const { isDarkMode, language } = useUI();
+    const { projects } = useContent();
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -137,7 +131,7 @@ const Projects = () => {
                 <div ref={scrollContainerRef} className="flex overflow-x-auto gap-4 sm:gap-6 pb-6 -mx-4 sm:-mx-8 px-4 sm:px-8 snap-x snap-mandatory scrollbar-hide">
                     {projects.map((project, index) => (
                         <motion.div
-                            key={project.title}
+                            key={project.id}
                             className={`flex-none w-[85%] sm:w-[90%] md:w-[400px] snap-center group flex flex-col backdrop-blur-sm rounded-2xl border shadow-lg overflow-hidden transition-all duration-300 ${isDarkMode
                                 ? 'bg-gray-900/50 border-gray-800 hover:border-blue-500/30 hover:shadow-blue-500/10'
                                 : 'bg-white/50 border-gray-200 hover:border-blue-400/50 hover:shadow-blue-400/20'
@@ -152,11 +146,11 @@ const Projects = () => {
                                 <div className={`w-12 h-1 bg-gradient-to-r ${project.color} rounded-full mb-4`} />
                                 <h4 className={`text-lg sm:text-xl font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'
                                     }`}>
-                                    {project.title}
+                                    {project.title[language]}
                                 </h4>
                                 <p className={`text-sm mb-4 flex-grow ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
                                     }`}>
-                                    {project.description}
+                                    {project.description[language]}
                                 </p>
                                 <div className="flex flex-wrap gap-2 mb-4">
                                     {project.tags.slice(0, 3).map((tag) => <span key={tag} className={`px-3 py-1 text-xs rounded-full ${isDarkMode

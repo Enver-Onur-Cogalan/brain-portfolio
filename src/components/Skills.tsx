@@ -1,58 +1,34 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Code, Database, Beaker, Cpu } from "lucide-react";
+import {
+    Code, Database, Beaker, Cpu,
+    Wrench, Palette, Package, Server, Globe,
+    Terminal, Box, Layers, FileCode, Sparkles
+} from 'lucide-react';
 import { useTranslation } from "../locales/translations";
 import useUI from "../store/useUI";
+import { useContent } from "../store/useContent";
+
+const iconMap = {
+    Code,
+    Database,
+    Beaker,
+    Cpu,
+    Wrench,
+    Palette,
+    Package,
+    Server,
+    Globe,
+    Terminal,
+    Box,
+    Layers,
+    FileCode,
+    Sparkles
+};
 
 const Skills = () => {
     const { t } = useTranslation();
     const { isDarkMode, language } = useUI();
-
-    const skillCategories = [
-        {
-            icon: Code,
-            title: t('skills.category.frontend'),
-            color: 'from-blue-500 to-cyan-500',
-            skills: [
-                { name: 'React/Next.js', level: 90 },
-                { name: 'TypeScript', level: 85 },
-                { name: 'Three.js/R3F', level: 75 },
-                { name: 'Tailwind CSS', level: 95 },
-            ],
-        },
-        {
-            icon: Database,
-            title: t('skills.category.backend'),
-            color: 'from-purple-500 to-pink-500',
-            skills: [
-                { name: 'Node.js/Express', level: 80 },
-                { name: 'PostgreSQL', level: 75 },
-                { name: 'MongoDB', level: 70 },
-                { name: 'GraphQL', level: 65 },
-            ],
-        },
-        {
-            icon: Beaker,
-            title: t('skills.category.biology'),
-            color: 'from-green-500 to-emerald-500',
-            skills: [
-                { name: 'Molecular Biology', level: 85 },
-                { name: 'Bioinformatics', level: 70 },
-                { name: 'Data Analysis', level: 80 },
-                { name: 'Scientific Writing', level: 90 },
-            ],
-        },
-        {
-            icon: Cpu,
-            title: t('skills.category.tools'),
-            color: 'from-orange-500 to-red-500',
-            skills: [
-                { name: 'Git/GitHub', level: 90 },
-                { name: 'Docker', level: 70 },
-                { name: 'AWS/Cloud', level: 65 },
-                { name: 'CI/CD', level: 75 },
-            ],
-        },
-    ];
+    const { skills: skillCategories } = useContent();
 
     const textVariants = {
         exit: {
@@ -128,10 +104,10 @@ const Skills = () => {
                     {/* Skills Grid */}
                     <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
                         {skillCategories.map((category, categoryIndex) => {
-                            const Icon = category.icon;
+                            const Icon = iconMap[category.icon as keyof typeof iconMap] || Code;
                             return (
                                 <motion.div
-                                    key={category.title}
+                                    key={category.id}
                                     initial={{ opacity: 0, y: 30 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ amount: 0.3 }}
@@ -148,7 +124,7 @@ const Skills = () => {
                                         </div>
                                         <h3 className={`text-lg sm:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'
                                             }`}>
-                                            {category.title}
+                                            {category.title[language]}
                                         </h3>
                                     </div>
 
