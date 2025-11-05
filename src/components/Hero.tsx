@@ -41,13 +41,14 @@ const Hero = () => {
 
             {/* Content */}
             <motion.div
-                className="relative z-10 text-center"
+                className="relative z-10 flex flex-col items-center text-center md:pl-32 lg:pl-48 xl:pl-64"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
             >
+                {/* Brain Icon - Başlığın Üstünde */}
                 <motion.div
-                    className="mb-8"
+                    className="mb-6 sm:mb-8"
                     animate={{
                         rotateY: [0, 360],
                     }}
@@ -57,10 +58,10 @@ const Hero = () => {
                         ease: 'linear'
                     }}
                 >
-                    <Brain className="w-20 h-20 sm:w-24 sm:h-24 mx-auto text-brain-400" />
+                    <Brain className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mx-auto text-brain-400" />
                 </motion.div>
 
-                <h1 className="text-4xl md:text-7xl font-bold mb-4 overflow-hidden">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 overflow-hidden px-2 md:px-0">
                     <AnimatePresence mode="wait">
                         <motion.span
                             key={language + '-title'}
@@ -75,7 +76,7 @@ const Hero = () => {
                     </AnimatePresence>
                 </h1>
 
-                <div className="overflow-hidden">
+                <div className="overflow-hidden mb-4">
                     <AnimatePresence mode="wait">
                         <motion.p
                             key={language + '-subtitle'}
@@ -83,7 +84,7 @@ const Hero = () => {
                             initial="enter"
                             animate="center"
                             exit="exit"
-                            className={`text-lg md:text-xl mb-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                            className={`text-base sm:text-lg md:text-xl transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
                                 }`}
                         >
                             {t('hero.subtitle')}
@@ -91,7 +92,7 @@ const Hero = () => {
                     </AnimatePresence>
                 </div>
 
-                <div className="overflow-hidden">
+                <div className="overflow-hidden px-2 md:px-0">
                     <AnimatePresence mode="wait">
                         <motion.p
                             key={language + '-description'}
@@ -99,7 +100,7 @@ const Hero = () => {
                             initial="enter"
                             animate="center"
                             exit="exit"
-                            className={`text-base sm:text-lg mb-12 transition-colors duration-300 ${isDarkMode
+                            className={`text-sm sm:text-base md:text-lg transition-colors duration-300 ${isDarkMode
                                 ? 'text-gray-400 hover:text-brain-400'
                                 : 'text-gray-600 hover:text-brain-500'
                                 }`}

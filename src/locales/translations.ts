@@ -12,8 +12,8 @@ export const translations = {
         'nav.contact': 'Contact',
 
         // Hero Section
-        'hero.title': 'Neural Portfolio',
-        'hero.subtitle': 'Exploring the intersection of Biology & Technology',
+        'hero.title': 'Enver Onur Çoğalan',
+        'hero.subtitle': 'A living form that writes code',
         'hero.description': 'Navigate through the lobes of my digital brain',
         'hero.scroll': 'Scroll to explore',
 
@@ -74,8 +74,8 @@ export const translations = {
         'nav.contact': 'İletişim',
 
         // Hero Bölümü
-        'hero.title': 'Nöral Portföy',
-        'hero.subtitle': 'Biyoloji ve Teknolojinin Kesişimi',
+        'hero.title': 'Enver Onur Çoğalan',
+        'hero.subtitle': 'Kodu yazan canlı form',
         'hero.description': 'Dijital beynimin loblarında gezinin',
         'hero.scroll': 'Keşfetmek için kaydırın',
 
