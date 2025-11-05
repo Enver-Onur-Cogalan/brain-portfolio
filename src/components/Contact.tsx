@@ -1,8 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Mail, Github, Linkedin, MapPin, Send } from "lucide-react";
+import { Mail, Github, Linkedin, MapPin, Send, AlertCircle } from "lucide-react";
 import React, { useState } from "react";
 import { useTranslation } from "../locales/translations";
 import useUI from "../store/useUI";
+import emailjs from '@emailjs/browser';
+
 
 const Contact = () => {
     const { t } = useTranslation();
@@ -17,6 +19,7 @@ const Contact = () => {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const socialLinks = [
         { icon: Github, href: 'https://github.com', label: 'GitHub', color: isDarkMode ? 'hover:text-gray-300' : 'hover:text-gray-900' },
@@ -27,16 +30,48 @@ const Contact = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setErrorMessage('');
+        setSubmitStatus('idle');
 
-        // Simulate form submission
-        setTimeout(() => {
-            setSubmitStatus('success');
+        try {
+            // EmailJS
+            const templateParams = {
+                from_name: formData.name,
+                reply_to: formData.email,
+                subject: formData.subject,
+                message: formData.message,
+                to_email: 'eonucogalan@gmail.com'
+            };
+
+            // Mail gönderme
+            const response = await emailjs.send(
+                import.meta.env.VITE_EMAILJS_SERVICE_ID,
+                import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+                templateParams,
+                import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+            );
+
+            if (response.status === 200) {
+                setSubmitStatus('success');
+                setFormData({ name: '', email: '', subject: '', message: '' });
+
+                setTimeout(() => setSubmitStatus('idle'), 5000);
+            }
+        } catch (error: any) {
+            console.error('Email gönderme hatası:', error);
+            setSubmitStatus('error');
+            setErrorMessage(
+                error?.text ||
+                'The email could not be sent. Please try again later or write directly to eonurcogalan@gmail.com.'
+            );
+
+            setTimeout(() => {
+                setSubmitStatus('idle');
+                setErrorMessage('');
+            }, 7000);
+        } finally {
             setIsSubmitting(false);
-            setFormData({ name: '', email: '', subject: '', message: '' });
-
-            // Reset status after 3 secons
-            setTimeout(() => setSubmitStatus('idle'), 3000);
-        }, 1500);
+        }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -263,6 +298,26 @@ const Contact = () => {
                                 className="form-input"
                                 placeholder={t('contact.form.message')}
                             />
+
+                            {/* Error Message */}
+                            <AnimatePresence mode="wait">
+                                {submitStatus === 'error' && errorMessage && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        className={`flex items-start gap-2 p-3 rounded-lg ${isDarkMode
+                                            ? 'bg-red-500/10 border border-red-500/30'
+                                            : 'bg-red-100 border border-red-300'
+                                            }`}
+                                    >
+                                        <AlertCircle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`} />
+                                        <p className={`text-sm ${isDarkMode ? 'text-red-300' : 'text-red-700'}`}>
+                                            {errorMessage}
+                                        </p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
                             <motion.button
                                 variants={inputVariant}
