@@ -15,6 +15,7 @@
 html {
     scroll-behavior: smooth;
     scrollbar-width: none;
+    font-size: clamp(14px, 1.5vw, 16px);
 }
 
 /* Base styles with theme support */
@@ -22,6 +23,9 @@ body {
     margin: 0;
     font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     overflow-x: hidden;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* Dark mode styles */
@@ -38,6 +42,7 @@ body:not(.dark) {
 
 #root {
     min-height: 100vh;
+    min-height: 100svh;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -181,6 +186,15 @@ textarea:focus-visible {
     -webkit-line-clamp: 2;
 }
 
+@media (max-width: 768px) {
+
+    button,
+    a[role="button"] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
 @layer components {
     .section-padding {
         @apply py-20 px-4 md:px-8 lg:px-16;
@@ -189,6 +203,7 @@ textarea:focus-visible {
     /* Form input with proper theme support */
     .form-input {
         @apply w-full bg-transparent border-b-2 py-3 outline-none transition-all duration-300;
+        min-height: 44px;
     }
 
     /* Dark mode form input */
@@ -208,6 +223,30 @@ textarea:focus-visible {
     body:not(.dark) .form-input:focus {
         @apply border-brain-500;
     }
+
+    .heading-1 {
+        font-size: clamp(2rem, 5vw, 3rem);
+        line-height: 1.2;
+    }
+
+    .heading-2 {
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        line-height: 1.3;
+    }
+
+    .heading-3 {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        line-height: 1.4;
+    }
+
+    .container-responsive {
+        width: 100%;
+        max-width: 1280px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: clamp(1rem, 5vw, 4rem);
+        padding-right: clamp(1rem, 5vw, 4rem);
+    }
 }
 
 @layer utilities {
@@ -218,6 +257,20 @@ textarea:focus-visible {
     .section-container {
         -ms-overflow-style: none;
         scrollbar-width: none;
+    }
+
+    .min-h-screen-safe {
+        min-height: 100vh;
+        min-height: 100svh;
+    }
+
+    .h-screen-safe {
+        height: 100vh;
+        height: 100svh;
+    }
+
+    .overflow-x-clip {
+        overflow-x: clip;
     }
 
     /* Text color utilities for theme */
@@ -246,17 +299,81 @@ textarea:focus-visible {
     .border-theme {
         @apply border-gray-200 dark:border-gray-800;
     }
+
+    .text-fluid-xs {
+        font-size: clamp(0.75rem, 2vw, 0.875rem);
+    }
+
+    .text-fluid-sm {
+        font-size: clamp(0.875rem, 2.5vw, 1rem);
+    }
+
+    .text-fluid-base {
+        font-size: clamp(1rem, 3vw, 1.125rem);
+    }
+
+    .text-fluid-lg {
+        font-size: clamp(1.125rem, 3.5vw, 1.25rem);
+    }
+
+    .text-fluid-xl {
+        font-size: clamp(1.25rem, 4vw, 1.5rem);
+    }
+
+    .text-fluid-2xl {
+        font-size: clamp(1.5rem, 5vw, 2rem);
+    }
+
+    .text-fluid-3xl {
+        font-size: clamp(1.875rem, 6vw, 2.5rem);
+    }
+
+    .text-fluid-4xl {
+        font-size: clamp(2.25rem, 7vw, 3rem);
+    }
+
+    .text-fluid-5xl {
+        font-size: clamp(2.5rem, 8vw, 3.5rem);
+    }
 }
 
 /* Responsive text sizing */
 @media (max-width: 640px) {
     html {
-        font-size: 14px;
+        font-size: clamp(14px, 4vw, 16px);
     }
 }
 
 @media (max-width: 380px) {
     html {
-        font-size: 13px;
+        font-size: clamp(13px, 4vw, 14px);
+    }
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: env(safe-area-inset-top)) {
+    .safe-top {
+        padding-top: env(safe-area-inset-top);
+    }
+
+    .safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .safe-left {
+        padding-left: env(safe-area-inset-left);
+    }
+
+    .safe-right {
+        padding-right: env(safe-area-inset-right);
     }
 }

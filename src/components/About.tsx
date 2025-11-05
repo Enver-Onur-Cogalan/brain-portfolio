@@ -104,8 +104,8 @@ const About = () => {
                             : 'bg-white/50 border-gray-200'
                             }`}
                     >
-                        <div className="grid md:grid-cols-5">
-                            <div className="md:col-span-3 p-6 sm:p-8 md:p-12">
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-0">
+                            <div className="md:col-span-3 p-6 sm:p-8 md:p-10 lg:p-12">
                                 <div className="overflow-hidden">
                                     <AnimatePresence mode="wait">
                                         <motion.h3
@@ -114,13 +114,13 @@ const About = () => {
                                             initial="enter"
                                             animate="center"
                                             exit="exit"
-                                            className="text-xl sm:text-2xl font-semibold text-brain-400 mb-4 sm:mb-6"
+                                            className="text-lg sm:text-xl md:text-2xl font-semibold text-brain-400 mb-4 sm:mb-6"
                                         >
                                             {t('about.heading')}
                                         </motion.h3>
                                     </AnimatePresence>
                                 </div>
-                                <div className={`space-y-4 leading-relaxed text-sm sm:text-base ${isDarkMode ? 'text-gray-300/90' : 'text-gray-700'
+                                <div className={`space-y-3 sm:space-y-4 leading-relaxed text-sm sm:text-base ${isDarkMode ? 'text-gray-300/90' : 'text-gray-700'
                                     }`}>
                                     <div className="overflow-hidden">
                                         <AnimatePresence mode="wait">
@@ -170,7 +170,7 @@ const About = () => {
                                         </motion.h4>
                                     </AnimatePresence>
                                 </div>
-                                <div className="space-y-6 sm:space-y-8">
+                                <div className="space-y-4 sm:space-y-6 md:space-y-8">
                                     {about.metrics.map((stat, index) => {
                                         const Icon = iconMap[stat.icon as keyof typeof iconMap];
                                         return (
@@ -187,7 +187,7 @@ const About = () => {
                                                     <div className="p-2 sm:p-3 bg-gradient-to-br from-brain-500/20 to-purple-500/20 rounded-lg">
                                                         <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-brain-400" />
                                                     </div>
-                                                    <div>
+                                                    <div className="min-w-0 flex-1">
                                                         <div className={`text-xl sm:text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'
                                                             }`}>{stat.value}</div>
 

@@ -304,33 +304,33 @@ function Home() {
             </div>
 
             {/* Main Content */}
-            <main ref={mainContainerRef} className={`h-screen overflow-y-auto overflow-x-hidden scroll-smooth transition-colors duration-300 ${isDarkMode ? 'bg-gray-950' : 'bg-gray-50'
+            <main ref={mainContainerRef} className={`h-screen-safe overflow-y-auto overflow-x-hidden scroll-smooth transition-colors duration-300 ${isDarkMode ? 'bg-gray-950' : 'bg-gray-50'
                 }`}>
                 <BrainCanvas />
 
-                <div id='hero' className='h-screen pointer-events-none'>
+                <div id='hero' className='h-screen-safe pointer-events-none'>
                     <Hero />
                 </div>
 
-                <div id='about' className='relative z-10 w-full flex justify-end h-screen pointer-events-none'>
+                <div id='about' className='relative z-10 w-full flex justify-end h-screen-safe pointer-events-none'>
                     <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
                         <About />
                     </div>
                 </div>
 
-                <div id='skills' className='relative z-10 w-full flex justify-end h-screen pointer-events-none'>
+                <div id='skills' className='relative z-10 w-full flex justify-end h-scree-safe pointer-events-none'>
                     <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
                         <Skills />
                     </div>
                 </div>
 
-                <div id='projects' className='relative z-10 w-full flex justify-end h-screen pointer-events-none'>
+                <div id='projects' className='relative z-10 w-full flex justify-end h-screen-safe pointer-events-none'>
                     <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
                         <Projects />
                     </div>
                 </div>
 
-                <div id='contact' className='relative z-10 w-full flex justify-end h-screen pointer-events-none'>
+                <div id='contact' className='relative z-10 w-full flex justify-end h-screen-safe pointer-events-none'>
                     <div className='w-full md:w-1/2 text-foreground overflow-y-auto section-container pointer-events-auto'>
                         <Contact />
                     </div>

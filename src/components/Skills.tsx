@@ -50,12 +50,12 @@ const Skills = () => {
     return (
         <section
             id="skills"
-            className={`min-h-screen py-20 sm:py-32 px-4 md:px-8 lg:px-16 snap-start flex flex-col justfiy-center ${isDarkMode
+            className={`min-h-screen py-16 sm:py-20 md:py-24 px-4 md:px-8 lg:px-16 snap-start flex flex-col justify-center ${isDarkMode
                 ? 'bg-gradient-to-b from-transparent via-purple-950/10 to-transparent'
                 : 'bg-gradient-to-b from-transparent via-purple-200/20 to-transparent'
                 }`}
         >
-            <div className="max-w-6xl mx-auto w-full">
+            <div className="max-w-6xl mx-auto w-full my-auto">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -63,7 +63,7 @@ const Skills = () => {
                     transition={{ duration: 0.8 }}
                 >
                     {/* Section Header */}
-                    <div className="flex items-center gap-4 mb-8 sm:mb-12">
+                    <div className="flex items-center gap-4 mb-6 sm:mb-8 md:mb-12">
                         <div className="p-2 sm:p-3 bg-purple-500/20 rounded-lg">
                             <Cpu className="w-6 h-6 sm:w-8 sm:h-8 text-purple-400" />
                         </div>
@@ -76,7 +76,7 @@ const Skills = () => {
                                         initial="enter"
                                         animate="center"
                                         exit="exit"
-                                        className={`text-3xl sm:text-4xl md:text-5xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'
+                                        className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'
                                             }`}
                                     >
                                         {t('skills.title')}
@@ -91,7 +91,7 @@ const Skills = () => {
                                         initial="enter"
                                         animate="center"
                                         exit="exit"
-                                        className={`mt-2 text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                                        className={`mt-1 sm:mt-2 text-xs sm:text-sm md:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
                                             }`}
                                     >
                                         {t('skills.subtitle')}
@@ -102,7 +102,7 @@ const Skills = () => {
                     </div>
 
                     {/* Skills Grid */}
-                    <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8">
                         {skillCategories.map((category, categoryIndex) => {
                             const Icon = iconMap[category.icon as keyof typeof iconMap] || Code;
                             return (
@@ -112,24 +112,24 @@ const Skills = () => {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ amount: 0.3 }}
                                     transition={{ delay: 0.2 + categoryIndex * 0.3 }}
-                                    className={`p-4 sm:p-6 backdrop-blur-sm rounded-2xl border ${isDarkMode
+                                    className={`p-4 sm:p-5 md:p-6 backdrop-blur-sm rounded-2xl border ${isDarkMode
                                         ? 'bg-gray-900/50 border-gray-800'
                                         : 'bg-white/50 border-gray-200'
                                         }`}
                                 >
                                     {/* Category Header */}
-                                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                                        <div className={`p-2 bg-gradient-to-r ${category.color} rounded-lg`}>
+                                    <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 md:mb-6">
+                                        <div className={`p-1.5 sm:p-2 bg-gradient-to-r ${category.color} rounded-lg`}>
                                             <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                                         </div>
-                                        <h3 className={`text-lg sm:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'
+                                        <h3 className={`text-base sm:text-lg md:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'
                                             }`}>
                                             {category.title[language]}
                                         </h3>
                                     </div>
 
                                     {/* Skills List */}
-                                    <div className="space-y-3 sm:space-y-4">
+                                    <div className="space-y-2.5 sm:space-y-3 md:space-y-4">
                                         {category.skills.map((skill, index) => (
                                             <motion.div
                                                 key={skill.name}
@@ -182,7 +182,7 @@ const Skills = () => {
                                     initial="enter"
                                     animate="center"
                                     exit="exit"
-                                    className={`text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                                    className={`text-xs sm:text-sm md:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
                                         }`}
                                 >
                                     {t('skills.description')}

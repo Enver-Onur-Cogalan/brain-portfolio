@@ -4,6 +4,10 @@ export default {
     darkMode: 'class',
     theme: {
         extend: {
+            screens: {
+                'xs': '475px',
+                '3xl': '1920px',
+            },
             colors: {
                 'brain': {
                     50: '#fdf2f8',
@@ -27,6 +31,12 @@ export default {
                     '0%, 100%': { transform: 'translateY(0px)' },
                     '50%': { transform: 'translateY(-20px)' },
                 }
+            },
+            spacing: {
+                'safe-top': 'env(safe-area-inset-top)',
+                'safe-bottom': 'env(safe-area-inset-bottom)',
+                'safe-left': 'env(safe-area-inset-left)',
+                'safe-right': 'env(safe-area-inset-right)',
             }
         },
     },
