@@ -174,26 +174,28 @@ const About = () => {
                                     {about.metrics.map((stat, index) => {
                                         const Icon = iconMap[stat.icon as keyof typeof iconMap];
                                         return (
-                                            <motion.div
-                                                key={index}
-                                                className="flex items-center gap-3 sm:gap-4"
-                                                initial={{ opacity: 0, x: 20 }}
-                                                whileInView={{ opacity: 1, x: 0 }}
-                                                viewport={{ once: true }}
-                                                transition={{ delay: 0.5 + index * 0.1 }}
-                                                whileHover={{ scale: 1.05 }}
-                                            >
-                                                <div className="p-2 sm:p-3 bg-gradient-to-br from-brain-500/20 to-purple-500/20 rounded-lg">
-                                                    <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-brain-400" />
-                                                </div>
-                                                <div>
-                                                    <div className={`text-xl sm:text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'
-                                                        }`}>{stat.value}</div>
+                                            <AnimatePresence mode="wait" key={`${stat.value}-${stat.label[language]}`}>
+                                                <motion.div
+                                                    key={index}
+                                                    className="flex items-center gap-3 sm:gap-4"
+                                                    initial={{ opacity: 0, x: 20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    exit={{ opacity: 0, x: -20 }}
+                                                    transition={{ delay: 0.5 + index * 0.1 }}
+                                                    whileHover={{ scale: 1.05 }}
+                                                >
+                                                    <div className="p-2 sm:p-3 bg-gradient-to-br from-brain-500/20 to-purple-500/20 rounded-lg">
+                                                        <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-brain-400" />
+                                                    </div>
+                                                    <div>
+                                                        <div className={`text-xl sm:text-2xl font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'
+                                                            }`}>{stat.value}</div>
 
-                                                    <div className={`text-xs sm:text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                                                        }`}>{stat.label[language]}</div>
-                                                </div>
-                                            </motion.div>
+                                                        <div className={`text-xs sm:text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                                                            }`}>{stat.label[language]}</div>
+                                                    </div>
+                                                </motion.div>
+                                            </AnimatePresence>
                                         );
                                     })}
                                 </div>
