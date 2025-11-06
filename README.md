@@ -4,7 +4,7 @@ Interactive 3D brain-themed portfolio website with admin panel for content manag
 
 ## 📸 Screenshots
 
-### Home Page
+### Admin Panel - About Editor
 <img width="1681" height="970" alt="Image" src="https://github.com/user-attachments/assets/60d43bc4-70e7-4d9d-bb1e-e762ac8a771e" />
 
 ### Admin Panel - Projects Editor
