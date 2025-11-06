@@ -1,73 +1,125 @@
-# React + TypeScript + Vite
+# 🧠 Brain Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interactive 3D brain-themed portfolio website with admin panel for content management.
 
-Currently, two official plugins are available:
+## 📸 Screenshots
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Admin Panel - About Editor
+<img width="1681" height="970" alt="Image" src="https://github.com/user-attachments/assets/60d43bc4-70e7-4d9d-bb1e-e762ac8a771e" />
 
-## React Compiler
+### Admin Panel - Projects Editor
+<img width="1681" height="970" alt="Image" src="https://github.com/user-attachments/assets/c4ad3e9e-acea-4f1a-9a30-69d927a69b35" />
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Admin Panel - Skills Editor
+<img width="1681" height="970" alt="Image" src="https://github.com/user-attachments/assets/71898723-d048-4ee7-8eec-c5d12416221c" />
 
-## Expanding the ESLint configuration
+> **Note:** Add your screenshots to a `screenshots/` folder in the root directory.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Technologies Used
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Frontend Framework:** React 19 + TypeScript
+- **3D Graphics:** Three.js + React Three Fiber + Drei
+- **Animations:** Framer Motion + GSAP
+- **Styling:** Tailwind CSS 4
+- **State Management:** Zustand
+- **Routing:** React Router DOM v7
+- **Email Service:** EmailJS
+- **Build Tool:** Vite 5
+- **Post Processing:** React Three Postprocessing
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 📂 Project Structure
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+brain-portfolio/
+├── public/
+│   └── brain_hologram.glb # 3D brain model
+├── src/
+│   ├── components/
+│   │   ├── canvas/ # 3D brain components
+│   │   │   ├── BrainCanvas.tsx
+│   │   │   ├── BrainModel.tsx
+│   │   │   └── PostProcessing.tsx
+│   │   ├── admin/ # Admin panel components
+│   │   │   ├── AdminLayout.tsx
+│   │   │   ├── AboutEditor.tsx
+│   │   │   ├── ProjectsEditor.tsx
+│   │   │   ├── SkillsEditor.tsx
+│   │   │   ├── PreviewPane.tsx
+│   │   │   └── LanguageToggle.tsx
+│   │   ├── About.tsx
+│   │   ├── Contact.tsx
+│   │   ├── Hero.tsx
+│   │   ├── Projects.tsx
+│   │   └── Skills.tsx
+│   ├── hooks/ # Custom React hooks
+│   │   ├── useLanguageTransition.ts
+│   │   ├── useLobeMapping.ts
+│   │   ├── useScrollProgress.ts
+│   │   ├── useScrollTransition.ts
+│   │   └── useThemeTransition.ts
+│   ├── pages/
+│   │   ├── Admin.tsx
+│   │   ├── AdminLogin.tsx
+│   │   └── Home.tsx
+│   ├── store/ # Zustand stores
+│   │   ├── useAuth.ts
+│   │   ├── useContent.ts
+│   │   └── useUI.ts
+│   ├── locales/
+│   │   └── translations.ts # EN/TR translations
+│   ├── types/
+│   │   └── content.ts
+│   └── styles/
+│       └── index.css
+├── .env # Environment variables
+├── package.json
+├── vite.config.ts
+└── tailwind.config.js
+
+
+
+## 🔐 Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# Admin Panel Password
+VITE_ADMIN_PASSWORD=your_secure_password_here
+
+# EmailJS Configuration
+VITE_EMAILJS_SERVICE_ID=your_service_id
+VITE_EMAILJS_TEMPLATE_ID=your_template_id
+VITE_EMAILJS_PUBLIC_KEY=your_public_key
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+> Get your EmailJS credentials from [emailjs.com](https://www.emailjs.com/)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🛠️ Installation & Setup
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. **Clone the repository**
+```bash
+git clone https://github.com/Enver-Onur-Cogalan/brain-portfolio.git
+cd brain-portfolio
 ```
+
+2. **Install dependencies**
+```bash
+npm install
+```
+
+3. **Create `.env` file**
+```bash
+# Copy the environment variables above and add your credentials
+```
+
+4. **Run development server**
+```bash
+npm run dev
+```
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+Feel free to use this project for your own portfolio!
+
+Made with ❤️ using React, Three.js, and TypeScript
