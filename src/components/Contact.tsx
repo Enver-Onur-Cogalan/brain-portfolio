@@ -22,8 +22,8 @@ const Contact = () => {
     const [errorMessage, setErrorMessage] = useState('');
 
     const socialLinks = [
-        { icon: Github, href: 'https://github.com', label: 'GitHub', color: isDarkMode ? 'hover:text-gray-300' : 'hover:text-gray-900' },
-        { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn', color: 'hover:text-blue-400' },
+        { icon: Github, href: 'https://github.com/Enver-Onur-Cogalan/', label: 'GitHub', color: isDarkMode ? 'hover:text-gray-300' : 'hover:text-gray-900' },
+        { icon: Linkedin, href: 'https://www.linkedin.com/in/onurcogalan/', label: 'LinkedIn', color: 'hover:text-blue-400' },
     ];
 
 

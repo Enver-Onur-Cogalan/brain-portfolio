@@ -185,7 +185,7 @@ const Skills = () => {
                                     className={`text-xs sm:text-sm md:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
                                         }`}
                                 >
-                                    {t('skills.description')}
+                                    "{t('skills.description')}"
                                 </motion.p>
                             </AnimatePresence>
                         </div>
