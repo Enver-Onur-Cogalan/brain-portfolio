@@ -43,7 +43,6 @@ export interface Project {
     };
     tags: string[];
     github: string;
-    demo: string;
     color: string; // gradient class
 }
 

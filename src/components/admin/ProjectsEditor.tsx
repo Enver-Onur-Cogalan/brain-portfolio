@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, ExternalLink, Github, FolderOpen } from 'lucide-react';
+import { Plus, Trash2, Github, FolderOpen } from 'lucide-react';
 import { useContent } from '../../store/useContent';
 import LanguageToggle from './LanguageToggle';
 import useUI from '../../store/useUI';

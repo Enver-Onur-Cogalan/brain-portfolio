@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, easeInOut } from 'framer-motion';
 import { Brain, Languages, Sun, Moon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -79,7 +79,7 @@ function Home() {
             exit: {
                 y: direction === 'up' ? -30 : 30,
                 opacity: 0,
-                transition: { duration: 0.2, ease: [0.43, 0.13, 0.23, 0.96] }
+                transition: { duration: 0.2, easeInOut }
             },
             enter: {
                 y: direction === 'up' ? 30 : -30,
@@ -88,7 +88,7 @@ function Home() {
             center: {
                 y: 0,
                 opacity: 1,
-                transition: { duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }
+                transition: { duration: 0.3, easeInOut }
             }
         }
     }

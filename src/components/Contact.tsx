@@ -1,4 +1,5 @@
-import { AnimatePresence, motion } from "framer-motion";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { AnimatePresence, easeInOut, motion } from "framer-motion";
 import { Mail, Github, Linkedin, MapPin, Send, AlertCircle } from "lucide-react";
 import React, { useState } from "react";
 import { useTranslation } from "../locales/translations";
@@ -90,7 +91,7 @@ const Contact = () => {
         exit: {
             y: -50,
             opacity: 0,
-            transition: { duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }
+            transition: { duration: 0.3, easeInOut }
         },
         enter: {
             y: 50,
@@ -99,7 +100,7 @@ const Contact = () => {
         center: {
             y: 0,
             opacity: 1,
-            transition: { duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }
+            transition: { duration: 0.4, easeInOut }
         }
     };
 

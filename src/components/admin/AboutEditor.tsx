@@ -62,7 +62,7 @@ const AboutEditor = ({ onChange }: Props) => {
                 {
                     icon: 'Award',
                     label: { en: 'New Metric', tr: 'Yeni Metric' },
-                    value: 0
+                    value: '0'
                 }
             ]
         };

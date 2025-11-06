@@ -2,7 +2,7 @@ import { useEffect, useCallback, type RefObject } from "react";
 import useUI from "../store/useUI";
 
 // DEĞİŞİKLİK: Hook artık bir "ref" alacak.
-export const useScrollProgress = (scrollContainerRef: RefObject<HTMLElement>) => {
+export const useScrollProgress = (scrollContainerRef: RefObject<HTMLElement | null>) => {
     const { setScrollProgress, setCurrentSection } = useUI();
 
     const handleScroll = useCallback(() => {

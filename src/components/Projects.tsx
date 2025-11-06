@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, easeInOut } from 'framer-motion';
 import { FolderOpen, Github, ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react';
 import { useState, useRef, useLayoutEffect } from 'react';
 import { useTranslation } from '../locales/translations';
@@ -45,7 +45,7 @@ const Projects = () => {
     const marqueeVariants = {
         animate: {
             x: [-1024, 0],
-            transition: { x: { repeat: Infinity, repeatType: "loop", duration: 15, ease: "linear" } },
+            transition: { x: { repeat: Infinity, repeatType: "loop" as const, duration: 15, ease: "linear" as const } },
         },
     };
 
@@ -53,7 +53,7 @@ const Projects = () => {
         exit: {
             y: -50,
             opacity: 0,
-            transition: { duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }
+            transition: { duration: 0.3, easeInOut }
         },
         enter: {
             y: 50,
@@ -62,7 +62,7 @@ const Projects = () => {
         center: {
             y: 0,
             opacity: 1,
-            transition: { duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }
+            transition: { duration: 0.4, easeInOut }
         }
     };
 
@@ -160,7 +160,7 @@ const Projects = () => {
                                         {tag}
                                     </span>)}
                                     <AnimatePresence>
-                                        {expanded === project.title && project.tags.slice(3).map(tag => (
+                                        {expanded === project.id && project.tags.slice(3).map(tag => (
                                             <motion.span
                                                 key={tag}
                                                 initial={{ opacity: 0, scale: 0.5 }}
@@ -176,13 +176,13 @@ const Projects = () => {
                                     </AnimatePresence>
                                     {project.tags.length > 3 && (
                                         <button
-                                            onClick={() => setExpanded(expanded === project.title ? null : project.title)}
+                                            onClick={() => setExpanded(expanded === project.id ? null : project.id)}
                                             className={`px-3 py-1 text-xs rounded-full transition-colors flex items-center gap-1 ${isDarkMode
                                                 ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
                                                 : 'bg-gray-300 hover:bg-gray-400 text-gray-700'
                                                 }`}>
-                                            {expanded === project.title ? 'Less' : `+${project.tags.length - 3}`}
-                                            <ChevronDown className={`w-3 h-3 transition-transform ${expanded === project.title ? 'rotate-180' : ''}`} />
+                                            {expanded === project.id ? 'Less' : `+${project.tags.length - 3}`}
+                                            <ChevronDown className={`w-3 h-3 transition-transform ${expanded === project.id ? 'rotate-180' : ''}`} />
                                         </button>
                                     )}
                                 </div>

@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, easeInOut, motion } from "framer-motion";
 import { ChevronDown, Brain } from 'lucide-react';
 import { useTranslation } from "../locales/translations";
 import useUI from "../store/useUI";
@@ -15,7 +15,7 @@ const Hero = () => {
         exit: {
             y: -50,
             opacity: 0,
-            transition: { duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }
+            transition: { duration: 0.3, easeInOut }
         },
         enter: {
             y: 50,
@@ -24,7 +24,7 @@ const Hero = () => {
         center: {
             y: 0,
             opacity: 1,
-            transition: { duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }
+            transition: { duration: 0.4, easeInOut }
         }
     };
 
