@@ -40,7 +40,7 @@ function Home() {
     const mainContainerRef = useRef<HTMLDivElement>(null);
 
 
-    useScrollProgress(mainContainerRef as RefObject<HTMLElement>);
+    useScrollProgress(mainContainerRef as RefObject<HTMLElement | null>);
     const { scrollToSection } = useScrollTransition(mainContainerRef);
 
     useEffect(() => {

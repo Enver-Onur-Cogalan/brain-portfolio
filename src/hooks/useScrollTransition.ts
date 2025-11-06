@@ -13,7 +13,7 @@ const SCROLL_DURATION = 1.0;    // scroll
 
 const SCROLL_DEBOUNCE = 100;
 
-export const useScrollTransition = (containerRef: React.RefObject<HTMLElement>) => {
+export const useScrollTransition = (containerRef: React.RefObject<HTMLElement | null>) => {
     const {
         currentSection,
         setCurrentSection,

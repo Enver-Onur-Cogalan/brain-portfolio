@@ -91,7 +91,6 @@ const defaultContent: ContentStore = {
             },
             tags: ['Three.js', 'WebGL', 'React', 'Biology'],
             github: 'https://github.com',
-            demo: 'https://demo.com',
             color: 'from-blue-500 to-cyan-500'
         },
         {
@@ -103,7 +102,6 @@ const defaultContent: ContentStore = {
             },
             tags: ['TensorFlow.js', 'D3.js', 'Python', 'ML'],
             github: 'https://github.com',
-            demo: 'https://demo.com',
             color: 'from-purple-500 to-pink-500'
         }
     ]
