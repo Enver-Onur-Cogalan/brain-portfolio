@@ -28,51 +28,54 @@ Interactive 3D brain-themed portfolio website with admin panel for content manag
 - **Post Processing:** React Three Postprocessing
 
 ## 📂 Project Structure
+
+```bash
 brain-portfolio/
 ├── public/
-│ └── brain_hologram.glb # 3D brain model
+│   └── brain_hologram.glb # 3D brain model
 ├── src/
-│ ├── components/
-│ │ ├── canvas/ # 3D brain components
-│ │ │ ├── BrainCanvas.tsx
-│ │ │ ├── BrainModel.tsx
-│ │ │ └── PostProcessing.tsx
-│ │ ├── admin/ # Admin panel components
-│ │ │ ├── AdminLayout.tsx
-│ │ │ ├── AboutEditor.tsx
-│ │ │ ├── ProjectsEditor.tsx
-│ │ │ ├── SkillsEditor.tsx
-│ │ │ ├── PreviewPane.tsx
-│ │ │ └── LanguageToggle.tsx
-│ │ ├── About.tsx
-│ │ ├── Contact.tsx
-│ │ ├── Hero.tsx
-│ │ ├── Projects.tsx
-│ │ └── Skills.tsx
-│ ├── hooks/ # Custom React hooks
-│ │ ├── useLanguageTransition.ts
-│ │ ├── useLobeMapping.ts
-│ │ ├── useScrollProgress.ts
-│ │ ├── useScrollTransition.ts
-│ │ └── useThemeTransition.ts
-│ ├── pages/
-│ │ ├── Admin.tsx
-│ │ ├── AdminLogin.tsx
-│ │ └── Home.tsx
-│ ├── store/ # Zustand stores
-│ │ ├── useAuth.ts
-│ │ ├── useContent.ts
-│ │ └── useUI.ts
-│ ├── locales/
-│ │ └── translations.ts # EN/TR translations
-│ ├── types/
-│ │ └── content.ts
-│ └── styles/
-│ └── index.css
+│   ├── components/
+│   │   ├── canvas/ # 3D brain components
+│   │   │   ├── BrainCanvas.tsx
+│   │   │   ├── BrainModel.tsx
+│   │   │   └── PostProcessing.tsx
+│   │   ├── admin/ # Admin panel components
+│   │   │   ├── AdminLayout.tsx
+│   │   │   ├── AboutEditor.tsx
+│   │   │   ├── ProjectsEditor.tsx
+│   │   │   ├── SkillsEditor.tsx
+│   │   │   ├── PreviewPane.tsx
+│   │   │   └── LanguageToggle.tsx
+│   │   ├── About.tsx
+│   │   ├── Contact.tsx
+│   │   ├── Hero.tsx
+│   │   ├── Projects.tsx
+│   │   └── Skills.tsx
+│   ├── hooks/ # Custom React hooks
+│   │   ├── useLanguageTransition.ts
+│   │   ├── useLobeMapping.ts
+│   │   ├── useScrollProgress.ts
+│   │   ├── useScrollTransition.ts
+│   │   └── useThemeTransition.ts
+│   ├── pages/
+│   │   ├── Admin.tsx
+│   │   ├── AdminLogin.tsx
+│   │   └── Home.tsx
+│   ├── store/ # Zustand stores
+│   │   ├── useAuth.ts
+│   │   ├── useContent.ts
+│   │   └── useUI.ts
+│   ├── locales/
+│   │   └── translations.ts # EN/TR translations
+│   ├── types/
+│   │   └── content.ts
+│   └── styles/
+│       └── index.css
 ├── .env # Environment variables
 ├── package.json
 ├── vite.config.ts
 └── tailwind.config.js
+
 
 
 ## 🔐 Environment Variables
