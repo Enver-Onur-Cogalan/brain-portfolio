@@ -4,6 +4,13 @@ import { Redis } from '@upstash/redis';
 const redis = Redis.fromEnv();
 
 export default async function handler(req: Request): Promise<Response> {
+
+    if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+        return new Response(JSON.stringify({ error: 'Missing Upstash env' }), {
+            status: 500, headers: { 'Content-Type': 'application/json' },
+        });
+    }
+
     if (req.method === 'GET') {
         const data = await redis.get('content');
         return new Response(JSON.stringify(data ?? null), {

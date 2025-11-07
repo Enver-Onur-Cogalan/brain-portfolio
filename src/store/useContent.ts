@@ -143,7 +143,17 @@ export const useContent = create<ContentState>()(
             loadFromServer: async () => {
                 try {
                     const res = await fetch('/api/content', { method: 'GET' });
-                    if (!res.ok) return;
+                    if (!res.ok) {
+                        const text = await res.text().catch(() => '');
+                        console.error('[loadFromServer] Failed', res.status, text || res.statusText);
+
+                        if (res.status === 404) console.error('Hint: Ensure. file exist at /api/content.ts (repo root).');
+                        if (res.status === 500) console.error('Hint: Check UPSTASH env vars on Vercel and redeploy.');
+                        if (res.status === 401) console.error('Hint: ADMIN_SECRET mismatch or missing.');
+
+                        return;
+                    };
+
                     const data = await res.json();
                     if (data && data.about && data.skills && data.projects) {
                         set({
@@ -151,9 +161,11 @@ export const useContent = create<ContentState>()(
                             skills: data.skills,
                             projects: data.projects,
                         });
+                    } else {
+                        console.warn('[loadFromServer] Response schema unexpected:', data);
                     }
                 } catch (e) {
-                    console.error('dataError', e);
+                    console.error('[loadFromServer] Network/Unexpected error', e);
                 }
             },
 
@@ -172,8 +184,20 @@ export const useContent = create<ContentState>()(
                             projects: state.projects,
                         }),
                     });
-                    return res.ok;
-                } catch {
+                    if (!res.ok) {
+                        const text = await res.text().catch(() => '');
+                        console.error('[loadFromServer] Failed', res.status, text || res.statusText);
+
+                        if (res.status === 404) console.error('Hint: Ensure. file exist at /api/content.ts (repo root).');
+                        if (res.status === 500) console.error('Hint: Check UPSTASH env vars on Vercel and redeploy.');
+                        if (res.status === 401) console.error('Hint: ADMIN_SECRET mismatch or missing.');
+
+                        return false;
+                    };
+
+                    return true;
+                } catch (e) {
+                    console.error('[loadFromServer] Network/Unexpected error', e);
                     return false;
                 }
             }
