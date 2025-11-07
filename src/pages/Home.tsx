@@ -19,6 +19,7 @@ import { useScrollTransition } from '../hooks/useScrollTransition';
 import { useTranslation } from '../locales/translations';
 import { useLanguageTransition } from '../hooks/useLanguageTransition';
 import { useThemeTransition, getBlurOverlayStyle } from '../hooks/useThemeTransition';
+import { useContent } from '../store/useContent';
 
 function Home() {
     const {
@@ -36,6 +37,7 @@ function Home() {
     const { t } = useTranslation();
     const languageTransition = useLanguageTransition(language);
     const themeTransition = useThemeTransition(isDarkMode);
+    const { loadFromServer } = useContent();
 
     const mainContainerRef = useRef<HTMLDivElement>(null);
 
@@ -46,6 +48,10 @@ function Home() {
     useEffect(() => {
         mainContainerRef.current?.scrollTo({ top: 0, behavior: 'instant' });
     }, []);
+
+    useEffect(() => {
+        loadFromServer();
+    }, [loadFromServer])
 
     // Apply theme to document
     useEffect(() => {

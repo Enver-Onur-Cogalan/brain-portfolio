@@ -6,13 +6,14 @@ import AboutEditor from "./AboutEditor";
 import SkillsEditor from "./SkillsEditor";
 import ProjectEditor from "./ProjectsEditor";
 import PreviewPane from "./PreviewPane";
-
+import { useContent } from "../../store/useContent";
 
 
 type Tab = 'about' | 'skills' | 'projects';
 
 const AdminLayout = () => {
     const { logout } = useAuth();
+    const { saveToServer } = useContent();
     const [activeTab, setActiveTab] = useState<Tab>('about');
     const [showPreview, setShowPreview] = useState(true);
     const [hasChanges, setHasChanges] = useState(false);
@@ -24,9 +25,11 @@ const AdminLayout = () => {
     ];
 
     const handleSave = () => {
-        // Content otomatik kaydediliyor (zustand persist)
-        setHasChanges(false);
-        alert('Changes saved successfully!');
+        const key = import.meta.env.VITE_ADMIN_PASSWORD as string;
+        saveToServer(key).then((ok) => {
+            setHasChanges(false);
+            alert(ok ? 'Published successfully!' : 'Publish failed');
+        })
     };
 
     return (

@@ -115,11 +115,13 @@ interface ContentState extends ContentStore {
     removeProject: (id: string) => void;
     addSkillCategory: (category: SkillCategory) => void;
     removeSkillCategory: (id: string) => void;
+    loadFromServer: () => Promise<void>;
+    saveToServer: (adminKey: string) => Promise<boolean>;
 }
 
 export const useContent = create<ContentState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             ...defaultContent,
 
             updateAbout: (about) => set({ about }),
@@ -137,6 +139,44 @@ export const useContent = create<ContentState>()(
 
             removeSkillCategory: (id) =>
                 set((state) => ({ skills: state.skills.filter(s => s.id !== id) })),
+
+            loadFromServer: async () => {
+                try {
+                    const res = await fetch('/api/content', { method: 'GET' });
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    if (data && data.about && data.skills && data.projects) {
+                        set({
+                            about: data.about,
+                            skills: data.skills,
+                            projects: data.projects,
+                        });
+                    }
+                } catch (e) {
+                    console.error('dataError', e);
+                }
+            },
+
+            saveToServer: async (adminKey: string) => {
+                try {
+                    const state = get();
+                    const res = await fetch('/api/content', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-admin-key': adminKey,
+                        },
+                        body: JSON.stringify({
+                            about: state.about,
+                            skills: state.skills,
+                            projects: state.projects,
+                        }),
+                    });
+                    return res.ok;
+                } catch {
+                    return false;
+                }
+            }
         }),
         {
             name: 'portfolio-content',
