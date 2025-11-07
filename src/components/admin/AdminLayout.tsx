@@ -17,6 +17,7 @@ const AdminLayout = () => {
     const [activeTab, setActiveTab] = useState<Tab>('about');
     const [showPreview, setShowPreview] = useState(true);
     const [hasChanges, setHasChanges] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     const tabs = [
         { id: 'about' as Tab, label: 'About Section' },
@@ -24,12 +25,23 @@ const AdminLayout = () => {
         { id: 'projects' as Tab, label: 'Projects Section' }
     ];
 
-    const handleSave = () => {
-        const key = import.meta.env.VITE_ADMIN_PASSWORD as string;
-        saveToServer(key).then((ok) => {
+    const handleSave = async () => {
+        const key = import.meta.env.VITE_ADMIN_PASSWORD as string | undefined;
+        if (!key) {
+            alert('VITE_AMDIN_PASSWORD tanımlı değil. Vercel -> Project Settings -> Environment Variables kısmına ekleyip redeploy et');
+            return;
+        }
+        try {
+            setIsSaving(true);
+            const ok = await saveToServer(key);
             setHasChanges(false);
-            alert(ok ? 'Published successfully!' : 'Publish failed');
-        })
+            alert(ok ? 'Published successfully!' : 'Publish failed. Ayrıntılar console’da.');
+        } catch (e) {
+            console.error('[handleSave] error', e);
+            alert('Publish failed (exception). Ayrıntılar console’da.');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
@@ -64,7 +76,7 @@ const AdminLayout = () => {
 
                         <button
                             onClick={logout}
-                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-2 transition-colors"
+                            className={`px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-2 transition-colors ${isSaving ? 'opacity-60 cursor-not-allowed' : ''}`}
                         >
                             <LogOut className="w-4 h-4" />
                             Logout
