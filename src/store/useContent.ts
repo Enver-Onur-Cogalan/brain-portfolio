@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { ContentStore, AboutContent, SkillCategory, Project } from '../types/content';
 
+
 const defaultContent: ContentStore = {
     about: {
         p1: {
