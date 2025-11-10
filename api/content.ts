@@ -20,7 +20,7 @@ const client = new MongoClient(process.env.MONGODB_URI || '');
 attachDatabasePool(client);
 
 async function getDb() {
-    const dbName = process.env.MONGODB_URI || 'brain-portfolio';
+    const dbName = process.env.MONGODB_DB || 'brain-portfolio';
     return client.db(dbName);
 }
 
