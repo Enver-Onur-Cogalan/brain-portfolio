@@ -15,8 +15,6 @@ Interactive 3D brain-themed portfolio website with admin panel for content manag
 ### Admin Panel - Projects Editor
 <img width="1681" height="970" alt="Image" src="https://github.com/user-attachments/assets/71898723-d048-4ee7-8eec-c5d12416221c" />
 
-> **Note:** Add your screenshots to a `screenshots/` folder in the root directory.
-
 ## 🚀 Technologies Used
 
 - **Frontend Framework:** React 19 + TypeScript
