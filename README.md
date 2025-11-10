@@ -9,10 +9,10 @@ Interactive 3D brain-themed portfolio website with admin panel for content manag
 ### Admin Panel - About Editor
 <img width="1681" height="970" alt="Image" src="https://github.com/user-attachments/assets/60d43bc4-70e7-4d9d-bb1e-e762ac8a771e" />
 
-### Admin Panel - Projects Editor
+### Admin Panel - Skills Editor
 <img width="1681" height="970" alt="Image" src="https://github.com/user-attachments/assets/c4ad3e9e-acea-4f1a-9a30-69d927a69b35" />
 
-### Admin Panel - Skills Editor
+### Admin Panel - Projects Editor
 <img width="1681" height="970" alt="Image" src="https://github.com/user-attachments/assets/71898723-d048-4ee7-8eec-c5d12416221c" />
 
 > **Note:** Add your screenshots to a `screenshots/` folder in the root directory.
