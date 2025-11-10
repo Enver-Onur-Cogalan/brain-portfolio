@@ -1,5 +1,7 @@
 # 🧠 Brain Portfolio
 
+**[🚀 View the live site here!](https://brain-portfolio.vercel.app)**
+
 Interactive 3D brain-themed portfolio website with admin panel for content management.
 
 ## 📸 Screenshots
@@ -24,8 +26,8 @@ Interactive 3D brain-themed portfolio website with admin panel for content manag
 - **State Management:** Zustand
 - **Routing:** React Router DOM v7
 - **Email Service:** EmailJS
-- **Build Tool:** Vite 5
-- **Post Processing:** React Three Postprocessing
+- **Database**: MongoDB
+- **Deployment**: Vercel
 
 ## 📂 Project Structure
 
@@ -33,6 +35,8 @@ Interactive 3D brain-themed portfolio website with admin panel for content manag
 brain-portfolio/
 ├── public/
 │   └── brain_hologram.glb # 3D brain model
+├── api/
+│   └── content.ts # Serverless function for DB operations
 ├── src/
 │   ├── components/
 │   │   ├── canvas/ # 3D brain components
@@ -90,6 +94,10 @@ VITE_ADMIN_PASSWORD=your_secure_password_here
 VITE_EMAILJS_SERVICE_ID=your_service_id
 VITE_EMAILJS_TEMPLATE_ID=your_template_id
 VITE_EMAILJS_PUBLIC_KEY=your_public_key
+
+#Database Configuration
+MONGODB_URI=The_connection_string_for_your_MongoDB_database.
+MONGODB_DB=The_name_of_the_database_to_be_used.
 ```
 
 > Get your EmailJS credentials from [emailjs.com](https://www.emailjs.com/)
