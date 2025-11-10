@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MongoClient } from 'mongodb';
 import { attachDatabasePool } from '@vercel/functions';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const cors = {
     'Access-Control-Allow-Origin': '*',
@@ -8,84 +9,54 @@ const cors = {
     'Access-Control-Allow-Headers': 'Content-Type, x-admin-key',
 };
 
-type ContentDoc = {
-    _id: string;
-    about: unknown;
-    skills: unknown;
-    projects: unknown;
-}
-// Check if MONGODB_URI is provided
-if (!process.env.MONGODB_URI) {
-    console.error("FATAL: MONGODB_URI environment variable is not set.");
-} else {
-    console.log("MONGODB_URI is set, initializing client.");
-}
 
 const client = new MongoClient(process.env.MONGODB_URI || '');
-
-console.log("Attaching database pool...");
 attachDatabasePool(client);
-console.log("Database pool attached.");
 
 async function getDb() {
-    console.log("getDb function called.");
     const dbName = process.env.MONGODB_DB || 'brain-portfolio';
-    console.log(`Attempting to get database: ${dbName}`);
-    const db = client.db(dbName);
-    console.log("Database object created, returning.");
-    return db;
+    return client.db(dbName);
 }
 
-export default async function handler(req: Request): Promise<Response> {
-    console.log(`[${req.method}] /api/content handler started.`);
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-key');
 
     if (req.method === 'OPTIONS') {
-        console.log("Handling OPTIONS request.");
         return new Response(null, { status: 204, headers: cors });
     }
 
     try {
-        console.log("Inside try block. Calling getDb()...");
         const db = await getDb();
-        console.log("getDb() returned. Getting 'content' collection...");
-        const col = db.collection<ContentDoc>('content');
-        console.log("'content' collection retrieved.");
+        const col = db.collection('content');
 
         if (req.method === 'GET') {
-            console.log("Handling GET request. Calling findOne()...");
-            const doc = await col.findOne<{ about: unknown; skills: unknown; projects: unknown }>({ _id: 'singleton' });
-            console.log("findOne() completed.");
-            return new Response(JSON.stringify(doc ? { about: doc.about, skills: doc.skills, projects: doc.projects } : null), {
-                status: 200, headers: { 'Content-Type': 'application/json', ...cors },
-            });
+            const doc = await col.findOne({ _id: 'singleton' });
+            return res.status(200).json(doc ? { about: doc.about, skills: doc.skills, projects: doc.projects } : null)
         }
 
         if (req.method === 'PUT') {
-            console.log("Handling PUT request. Checking admin key...");
-            const adminKey = req.headers.get('x-admin-key') || '';
+            const adminKey = req.headers['x-admin-key'] || '';
             if (!adminKey || adminKey !== process.env.ADMIN_SECRET) {
-                console.error("Unauthorized attempt: Admin key mismatch or missing.");
-                return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json', ...cors } });
+                return res.status(401).json({ error: 'Unauthorized' });
             }
-            console.log("Admin key authorized. Parsing request body...");
-            const body = await req.json();
-            console.log("Request body parsed.");
+
+            const body = await req.body;
             if (!body || !body.skills || !body.projects) {
                 console.error("Invalid payload.");
-                return new Response(JSON.stringify({ error: 'Invalid payload' }), { status: 400, headers: { 'Content-Type': 'application/json', ...cors } });
+                return res.status(400).json({ error: 'Invalid Payload' });
             }
-            console.log("Payload is valid. Calling updateOne()...");
-            await col.updateOne({ _id: 'singleton' }, { $set: body }, { upsert: true });
-            console.log("updateOne() completed successfully.");
 
-            return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { 'Content-Type': 'application/json', ...cors } })
+            await col.updateOne({ _id: 'singleton' }, { $set: body }, { upsert: true });
+            return res.status(200).json({ ok: true });
         }
 
-        console.log(`Method ${req.method} not allowed.`);
-        return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'GET, PUT, OPTIONS', ...cors } })
+        res.setHeader('Allow', 'GET, PUT, OPTIONS');
+        return res.status(405).send('Method Not Allowed');
+
     } catch (e: any) {
-        console.error("!!! UNCAUGHT EXCEPTION IN HANDLER !!!");
-        console.error(e);
-        return new Response(JSON.stringify({ error: e?.message || 'Server error' }), { status: 500, headers: { 'Content-Type': 'application/json', ...cors } })
+        console.error("API Error", e);
+        return res.status(500).json({ error: e?.message || 'Server error' });
     }
 }
