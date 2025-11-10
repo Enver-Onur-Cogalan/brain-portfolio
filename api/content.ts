@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MongoClient } from 'mongodb';
+import { attachDatabasePool } from '@vercel/functions';
 
 const cors = {
     'Access-Control-Allow-Origin': '*',
@@ -14,19 +15,13 @@ type ContentDoc = {
     projects: unknown;
 }
 
-let cachedClient: MongoClient | null = null;
+const client = new MongoClient(process.env.MONGODB_URI || '');
+
+attachDatabasePool(client);
 
 async function getDb() {
-    const uri = process.env.MONGODB_URI;
-    if (!uri) throw new Error('Missing MONGODB_URI');
-    if (!cachedClient) {
-        cachedClient = new MongoClient(uri, {
-            serverSelectionTimeoutMS: 5000, // 5s içinde bağlantı kurulamazsa hızlıca hata
-        });
-        await cachedClient.connect();
-    }
-    const dbName = process.env.MONGODB_DB || 'brain-portfolio';
-    return cachedClient.db(dbName);
+    const dbName = process.env.MONGODB_URI || 'brain-portfolio';
+    return client.db(dbName);
 }
 
 export default async function handler(req: Request): Promise<Response> {
