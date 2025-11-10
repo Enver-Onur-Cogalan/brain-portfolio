@@ -36,7 +36,7 @@ export default async function handler(req: Request): Promise<Response> {
 
     try {
         const db = await getDb();
-        const col = db.collection<ContentDoc>('connect');
+        const col = db.collection<ContentDoc>('content');
         if (req.method === 'GET') {
             const doc = await col.findOne<{ about: unknown; skills: unknown; projects: unknown }>({ _id: 'singleton' });
             return new Response(JSON.stringify(doc ? { about: doc.about, skills: doc.skills, projects: doc.projects } : null), {
